@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Auto Shop</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #f5f5f7;
+        }
+
+        .admin-header {
+            background: #1f1f1f;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .admin-header h1 {
+            font-size: 1.5rem;
+        }
+
+        .logout-btn {
+            background: #e0242a;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .logout-btn:hover {
+            background: #b01b21;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #e0242a;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #e0242a;
+            border-bottom-color: #e0242a;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .data-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f8f8f8;
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-confirmed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-btn {
+            padding: 0.35rem 0.75rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-right: 0.5rem;
+            font-weight: 600;
+        }
+
+        .btn-confirm {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-complete {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-cancel {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #6c757d;
+            color: white;
+        }
+
+        .action-btn:hover {
+            opacity: 0.8;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .search-box {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #e0242a;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                overflow-x: auto;
+            }
+
+            .data-table {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="admin-header">
+        <h1>🔧 Admin Dashboard</h1>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </header>
+
+    <div class="container">
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <div class="stat-number" id="totalUsers">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Pending Appointments</h3>
+                <div class="stat-number" id="pendingAppointments">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Appointments</h3>
+                <div class="stat-number" id="totalAppointments">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Contact Messages</h3>
+                <div class="stat-number" id="totalContacts">0</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('appointments')">Appointments</button>
+            <button class="tab-btn" onclick="switchTab('users')">Users</button>
+            <button class="tab-btn" onclick="switchTab('contacts')">Contact Messages</button>
+        </div>
+
+        <!-- Appointments Tab -->
+        <div id="appointments-tab" class="tab-content active">
+            <div class="search-box">
+                <input type="text" id="appointmentSearch" placeholder="Search appointments by name, phone, or service..." onkeyup="filterAppointments()">
+            </div>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date Created</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Service</th>
+                            <th>Preferred Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appointmentsTable">
+                        <tr><td colspan="8" class="loading">Loading appointments...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Users Tab -->
+        <div id="users-tab" class="tab-content">
+            <div class="search-box">
+                <input type="text" id="userSearch" placeholder="Search users by name or email..." onkeyup="filterUsers()">
+            </div>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Registered</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Auth Method</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTable">
+                        <tr><td colspan="6" class="loading">Loading users...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Contacts Tab -->
+        <div id="contacts-tab" class="tab-content">
+            <div class="search-box">
+                <input type="text" id="contactSearch" placeholder="Search messages..." onkeyup="filterContacts()">
+            </div>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Message</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contactsTable">
+                        <tr><td colspan="6" class="loading">Loading contacts...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>
+        const API_URL = window.API_URL || 'http://localhost:3000/api';
+        let allAppointments = [];
+        let allUsers = [];
+        let allContacts = [];
+
+        // Check if admin is logged in
+        function checkAdminAuth() {
+            const adminUser = sessionStorage.getItem('autoShopAdmin');
+            if (!adminUser) {
+                window.location.href = '/admin-login.html';
+                return false;
+            }
+            return JSON.parse(adminUser);
+        }
+
+        const admin = checkAdminAuth();
+
+        // Logout
+        function logout() {
+            sessionStorage.removeItem('autoShopAdmin');
+            window.location.href = '/admin-login.html';
+        }
+
+        // Switch tabs
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + '-tab').classList.add('active');
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        // Load appointments
+        async function loadAppointments() {
+            try {
+                const response = await fetch(API_URL + '/appointments', {
+                    headers: {
+                        'Authorization': 'Bearer ' + admin.token
+                    }
+                });
+                const data = await response.json();
+                allAppointments = data.appointments || [];
+                
+                displayAppointments(allAppointments);
+                updateStats();
+            } catch (error) {
+                console.error('Error loading appointments:', error);
+                document.getElementById('appointmentsTable').innerHTML = 
+                    '<tr><td colspan="8" class="empty-state">Error loading appointments</td></tr>';
+            }
+        }
+
+        function displayAppointments(appointments) {
+            const tbody = document.getElementById('appointmentsTable');
+            
+            if (appointments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No appointments found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = appointments.map(apt => `
+                <tr>
+                    <td>${formatDate(apt.createdAt)}</td>
+                    <td>${apt.name}</td>
+                    <td>${apt.phone}</td>
+                    <td>${apt.email || 'N/A'}</td>
+                    <td>${apt.service}</td>
+                    <td>${apt.preferredDate ? new Date(apt.preferredDate).toLocaleDateString() : 'N/A'}</td>
+                    <td><span class="status-badge status-${apt.status}">${apt.status}</span></td>
+                    <td>
+                        <button class="action-btn" onclick="viewDetails('${apt._id}')">Details</button>
+                        ${apt.status === 'pending' ? `<button class="action-btn btn-confirm" onclick="updateStatus('${apt._id}', 'confirmed')">Confirm</button>` : ''}
+                        ${apt.status === 'confirmed' ? `<button class="action-btn btn-complete" onclick="updateStatus('${apt._id}', 'completed')">Complete</button>` : ''}
+                        ${apt.status !== 'cancelled' ? `<button class="action-btn btn-cancel" onclick="updateStatus('${apt._id}', 'cancelled')">Cancel</button>` : ''}
+                        <button class="action-btn btn-delete" onclick="deleteAppointment('${apt._id}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterAppointments() {
+            const search = document.getElementById('appointmentSearch').value.toLowerCase();
+            const filtered = allAppointments.filter(apt => 
+                apt.name.toLowerCase().includes(search) ||
+                apt.phone.includes(search) ||
+                apt.service.toLowerCase().includes(search) ||
+                (apt.email && apt.email.toLowerCase().includes(search))
+            );
+            displayAppointments(filtered);
+        }
+
+        // Update appointment status
+        async function updateStatus(id, status) {
+            try {
+                const response = await fetch(API_URL + '/appointments/' + id, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + admin.token
+                    },
+                    body: JSON.stringify({ status })
+                });
+
+                if (response.ok) {
+                    alert('Status updated successfully!');
+                    loadAppointments();
+                } else {
+                    alert('Failed to update status');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error updating status');
+            }
+        }
+
+        function viewDetails(id) {
+            const appointment = allAppointments.find(apt => apt._id === id);
+
+            if (!appointment) {
+                alert('Appointment not found');
+                return;
+            }
+
+            let details = `
+        Appointment Details
+
+        Name: ${appointment.name}
+        Email: ${appointment.email || 'N/A'}
+        Phone: ${appointment.phone}
+        Service: ${appointment.service}
+        Preferred Date: ${appointment.preferredDate ? new Date(appointment.preferredDate).toLocaleString() : 'N/A'}
+        Message: ${appointment.message || 'N/A'}
+        Status: ${appointment.status}
+        Created At: ${new Date(appointment.createdAt).toLocaleString()}
+            `;
+
+            alert(details);
+        }
+
+        // Delete appointment
+        async function deleteAppointment(id) {
+            if (!confirm('Are you sure you want to delete this appointment?')) return;
+
+            try {
+                const response = await fetch(API_URL + '/appointments/' + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + admin.token
+                    }
+                });
+
+                if (response.ok) {
+                    alert('Appointment deleted!');
+                    loadAppointments();
+                } else {
+                    alert('Failed to delete appointment');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error deleting appointment');
+            }
+        }
+
+        // Load users
+        async function loadUsers() {
+            try {
+                const response = await fetch(API_URL + '/users', {
+                    headers: {
+                        'Authorization': 'Bearer ' + admin.token
+                    }
+                });
+                const data = await response.json();
+                allUsers = data.users || [];
+                
+                displayUsers(allUsers);
+                updateStats();
+            } catch (error) {
+                console.error('Error loading users:', error);
+                document.getElementById('usersTable').innerHTML = 
+                    '<tr><td colspan="6" class="empty-state">Error loading users</td></tr>';
+            }
+        }
+
+        function displayUsers(users) {
+            const tbody = document.getElementById('usersTable');
+            
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No users found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${formatDate(user.createdAt)}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.phone || 'N/A'}</td>
+                    <td>${user.authProvider || 'local'}</td>
+                    <td>
+                        <button class="action-btn btn-delete" onclick="deleteUser('${user._id}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterUsers() {
+            const search = document.getElementById('userSearch').value.toLowerCase();
+            const filtered = allUsers.filter(user => 
+                user.name.toLowerCase().includes(search) ||
+                user.email.toLowerCase().includes(search)
+            );
+            displayUsers(filtered);
+        }
+
+        // Delete user
+        async function deleteUser(id) {
+            if (!confirm('Are you sure you want to delete this user?')) return;
+
+            try {
+                const response = await fetch(API_URL + '/users/' + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + admin.token
+                    }
+                });
+
+                if (response.ok) {
+                    alert('User deleted!');
+                    loadUsers();
+                } else {
+                    alert('Failed to delete user');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error deleting user');
+            }
+        }
+
+        // Load contacts
+        async function loadContacts() {
+            try {
+                const response = await fetch(API_URL + '/contact', {
+                    headers: {
+                        'Authorization': 'Bearer ' + admin.token
+                    }
+                });
+                const data = await response.json();
+                allContacts = data.contacts || [];
+                
+                displayContacts(allContacts);
+                updateStats();
+            } catch (error) {
+                console.error('Error loading contacts:', error);
+                document.getElementById('contactsTable').innerHTML = 
+                    '<tr><td colspan="6" class="empty-state">Error loading contacts</td></tr>';
+            }
+        }
+
+        function displayContacts(contacts) {
+            const tbody = document.getElementById('contactsTable');
+            
+            if (contacts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No contact messages found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = contacts.map(contact => `
+                <tr>
+                    <td>${formatDate(contact.createdAt)}</td>
+                    <td>${contact.name}</td>
+                    <td>${contact.email}</td>
+                    <td>${contact.phone || 'N/A'}</td>
+                    <td style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${contact.message}</td>
+                    <td>
+                        <button class="action-btn btn-delete" onclick="deleteContact('${contact._id}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterContacts() {
+            const search = document.getElementById('contactSearch').value.toLowerCase();
+            const filtered = allContacts.filter(contact => 
+                contact.name.toLowerCase().includes(search) ||
+                contact.email.toLowerCase().includes(search) ||
+                contact.message.toLowerCase().includes(search)
+            );
+            displayContacts(filtered);
+        }
+
+        // Delete contact
+        async function deleteContact(id) {
+            if (!confirm('Are you sure you want to delete this message?')) return;
+
+            try {
+                const response = await fetch(API_URL + '/contact/' + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + admin.token
+                    }
+                });
+
+                if (response.ok) {
+                    alert('Message deleted!');
+                    loadContacts();
+                } else {
+                    alert('Failed to delete message');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error deleting message');
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalUsers').textContent = allUsers.length;
+            document.getElementById('totalAppointments').textContent = allAppointments.length;
+            document.getElementById('pendingAppointments').textContent = 
+                allAppointments.filter(apt => apt.status === 'pending').length;
+            document.getElementById('totalContacts').textContent = allContacts.length;
+        }
+
+        // Initialize
+        loadAppointments();
+        loadUsers();
+        loadContacts();
+    </script>
+
+</body>
+</html>

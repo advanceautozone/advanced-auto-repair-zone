@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>[SHOP NAME] Auto Service & Repair | Home</title>
+    <meta name="description" content="[SHOP NAME] provides reliable auto repair, brake service, towing, oil changes and more in your local area. Book an appointment online today.">
+    <link rel="icon" type="image/png" href="images/favicon-512.jpeg" />
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+    <!-- Header / Navigation -->
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <img src="images/logo-horizontal.png" alt="[SHOP NAME] Auto Service Logo">
+            </a>
+
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span class="nav-toggle-line"></span>
+                <span class="nav-toggle-line"></span>
+                <span class="nav-toggle-line"></span>
+            </button>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="coupons.html">Coupons</a></li>
+                    <li><a href="towing.html">Towing</a></li>
+                    <li><a href="brakes.html">Brakes</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-cta">
+                <a href="tel:YOUR_PHONE_NUMBER" class="header-phone">Call: YOUR_PHONE_NUMBER</a>
+                <a href="contact.html" class="btn btn-primary">Book Appointment</a>
+                <a href="Login.html" class="btn btn-primary" id="loginButton">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-inner container">
+                <div class="hero-content">
+                    <h1>Your Trusted Advanced Auto Repair Zone</h1>
+                    <p>Reliable maintenance, honest recommendations, and certified technicians to keep your vehicle safe and on the road.</p>
+                    <div class="hero-actions">
+                        <a href="contact.html" class="btn btn-primary">Schedule Service</a>
+                        <a href="services.html" class="btn btn-outline">View All Services</a>
+                    </div>
+                </div>
+
+                <div class="hero-form-card">
+                    <h2>Request an Appointment</h2>
+                    <form class="hero-form" id="heroAppointmentForm">
+                        <input type="hidden" name="form_type" value="hero_appointment">
+                        <div class="form-group">
+                            <label for="hero-name">Name</label>
+                            <input type="text" id="hero-name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-phone">Phone</label>
+                            <input type="tel" id="hero-phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-service">Service Needed</label>
+                            <select id="hero-service" name="service" required>
+                                <option value="">Select a service</option>
+                                <option value="Air-and-Cabin-Filter-Replacement">Air and Cabin Filter Replacement</option>
+                                <option value="Air-Conditioning">Air Conditioning</option>
+                                <option value="Vehicle-Engine-Diagnostic">Vehicle Engine Diagnostic</option>
+                                <option value="battery">Battery Service</option>
+                                <option value="Brakes">Brakes</option>
+                                <option value="Oil-Change">Oil Change</option>
+                                <option value="Steering-and-Suspension-Repair">Steering and Suspension Repair</option>
+                                <option value="Transmission">Transmission</option>
+                                <option value="AC-Installation-and-Repair">A/C Installation and Repair</option>
+                                <option value="Vehicle-AC-Recharge">Vehicle A/C Recharge</option>
+                                <option value="Vehicle-AC-Replacement">Vehicle A/C Replacement</option>
+                                <option value="Vehicle-Battery-Maintenance">Vehicle Battery Maintenance</option>
+                                <option value="Vehicle-Battery-Replacement">Vehicle Battery Replacement</option>
+                                <option value="Vehicle-Brake-Repair">Vehicle Brake Repair</option>
+                                <option value="Vehicle-Brake-Replacement">Vehicle Brake Replacement</option>
+                                <option value="Vehicle-Emissions-Testing">Vehicle Emissions Testing</option>
+                                <option value="Vehicle-Engine-Tuning">Vehicle Engine Tuning</option>
+                                <option value="Vehicle-Maintenance">Vehicle Maintenance</option>
+                                <option value="Vehicle-Power-Window-Repair">Vehicle Power Window Repair</option>
+                                <option value="Carburetor-Cleaning">Carburetor Cleaning</option>
+                                <option value="Electrical-Repair">Electrical Repair</option>
+                                <option value="Engine-Repair">Engine Repair</option>
+                                <option value="General-Repairs-and-Maintenance">General Repairs & Maintenance</option>
+                                <option value="Steering-and-Suspension-Replacement">Steering and Suspension Replacement</option>
+                                <option value="Transmission-Repair">Transmission Repair</option>
+                                <option value="Transmission-Replacement">Transmission Replacement</option>
+                                <option value="Vehicle-Inspection">Vehicle Inspection</option>
+                                <option value="Vehicle-Safety-Inspection">Vehicle Safety Inspection</option>
+                                <option value="Wheel-Alignment">Wheel Alignment</option>
+                                <option value="Wiper-Blade-Installation">Wiper Blade Installation</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-date">Preferred Date</label>
+                            <input type="date" id="hero-date" name="preferred_date">
+                        </div>
+                        <!-- simple honeypot for spam -->
+                        <div class="hp-field">
+                            <label>Leave this field empty</label>
+                            <input type="text" name="website">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Request Now</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="hero-bg-image">
+                <img src="images/hero-home-1.jpeg" alt="Mechanic working on car in auto repair shop">
+            </div>
+        </section>
+
+        <!-- Deals Strip -->
+        <section class="deals-strip">
+            <div class="container deals-strip-inner">
+                <p>The Best Deals for Brakes, Oil Changes, Inspections and More.</p>
+                <div class="deals-buttons">
+                    <a href="contact.html" class="btn btn-primary btn-sm">Make an Appointment</a>
+                    <a href="coupons.html" class="btn btn-outline btn-sm">View All Offers</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Promotions Section -->
+        <section class="promos container">
+            <article class="promo-card">
+                <div class="promo-image">
+                    <img src="images/promo-general-service.jpeg" alt="Mechanic performing general auto service">
+                </div>
+                <div class="promo-content">
+                    <h2>Save on Complete Auto Service with Coupons</h2>
+                    <p>Use our latest coupons to save on oil changes, inspections, and routine maintenance.</p>
+                    <a href="coupons.html" class="btn btn-primary">View Coupons</a>
+                </div>
+            </article>
+
+            <article class="promo-card">
+                <div class="promo-image">
+                    <img src="images/promo-brake-service.jpeg" alt="Brake service being performed">
+                </div>
+                <div class="promo-content">
+                    <h2>Save on Professional Brake Service</h2>
+                    <p>From pads to rotors, we provide complete brake inspections and repair to keep you safe.</p>
+                    <a href="brakes.html" class="btn btn-primary">Learn About Brakes</a>
+                </div>
+            </article>
+
+            <article class="promo-card">
+                <div class="promo-image">
+                    <img src="images/promo-battery-service.jpeg" alt="Car battery test and replacement">
+                </div>
+                <div class="promo-content">
+                    <h2>Free Battery Test with Any Service</h2>
+                    <p>Stay confident every time you start your car with a free battery health check.</p>
+                    <a href="services.html" class="btn btn-primary">View Battery Services</a>
+                </div>
+            </article>
+        </section>
+
+        <!-- CTA Bar -->
+        <section class="cta-bar">
+            <div class="container cta-bar-inner">
+                <h2>Your Local Auto Repair Experts</h2>
+                <div class="cta-bar-actions">
+                    <a href="contact.html" class="btn btn-primary">Book Appointment</a>
+                    <a href="services.html" class="btn btn-outline">See All Services</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advantage Section -->
+        <section class="advantage">
+            <div class="container">
+                <header class="section-header">
+                    <h2>The [SHOP NAME] Advantage</h2>
+                    <p>Here's what you can expect with every visit.</p>
+                </header>
+
+                <div class="advantage-grid">
+                    <article class="advantage-item">
+                        <img src="icons/icon-advantage-inspection.jpeg" alt="Free inspection icon">
+                        <h3>Free Vehicle Inspection</h3>
+                        <p>We'll perform a complimentary inspection to help you stay ahead of costly repairs.</p>
+                    </article>
+                    <article class="advantage-item">
+                        <img src="icons/icon-advantage-trust.jpeg" alt="Trust icon">
+                        <h3>Honest Recommendations</h3>
+                        <p>Clear explanations, upfront pricing, and only the work your vehicle truly needs.</p>
+                    </article>
+                    <article class="advantage-item">
+                        <img src="icons/icon-advantage-updates.jpeg" alt="Updates icon">
+                        <h3>Service Status Updates</h3>
+                        <p>We keep you informed with call or text updates while your vehicle is in our care.</p>
+                    </article>
+                    <article class="advantage-item">
+                        <img src="icons/icon-advantage-certified.jpeg" alt="Certified technicians icon">
+                        <h3>Certified Technicians</h3>
+                        <p>Experienced professionals using quality parts and trusted repair procedures.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- About / Story Section -->
+        <section class="about-story">
+            <div class="container about-story-inner">
+                <div class="about-text">
+                    <h2>Serving Our Community Since 20XX</h2>
+                    <p>[Write 1–2 paragraphs here about the shop's history, experience, and dedication to customers.]</p>
+                    <p>[Highlight years of experience, local roots, or any certifications.]</p>
+                    <a href="about.html" class="btn btn-outline">Learn More About Us</a>
+                </div>
+                <div class="about-image">
+                    <img src="images/about-team.jpeg" alt="Our auto service team">
+                </div>
+            </div>
+        </section>
+
+        <!-- Trust Banner -->
+        <section class="trust-banner">
+            <div class="container">
+                <p>Trusted Local Auto Service Provider in Your Area</p>
+            </div>
+        </section>
+
+        <!-- Seasonal Promo Section -->
+        <section class="seasonal container">
+            <div class="seasonal-inner">
+                <div class="seasonal-text">
+                    <h2>Peace of Mind on Every Seasonal Drive</h2>
+                    <p>Get your vehicle ready for the season with a complete inspection, fluid checks, and safety review.</p>
+                    <a href="coupons.html" class="btn btn-primary">View Seasonal Offers</a>
+                </div>
+                <div class="seasonal-image">
+                    <img src="images/seasonal-promo.jpeg" alt="Seasonal auto service promotion">
+                </div>
+            </div>
+        </section>
+
+        <!-- Ask Us About Section -->
+        <section class="ask-about">
+            <div class="container">
+                <header class="section-header">
+                    <h2>Ask us about</h2>
+                    <p>What auto services are essential to maintain your vehicle?</p>
+                </header>
+
+                <div class="ask-grid">
+                    <article class="ask-item">
+                        <img src="icons/icon-service-alignment.jpeg" alt="Wheel alignment icon">
+                        <h3>Wheel Alignment</h3>
+                        <p>Improve tire wear and handling with proper alignment.</p>
+                    </article>
+                    <article class="ask-item">
+                        <img src="icons/icon-service-battery.jpeg" alt="Battery icon">
+                        <h3>Shop Batteries</h3>
+                        <p>Testing, replacement, and installation of quality batteries.</p>
+                    </article>
+                    <article class="ask-item">
+                        <img src="icons/icon-service-brakes.jpeg" alt="Brake services icon">
+                        <h3>Brake Services</h3>
+                        <p>Inspections, pads, rotors, and complete brake repair.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- People Also Viewed Section -->
+        <section class="people-viewed">
+            <div class="container">
+                <header class="section-header">
+                    <h2>People also viewed</h2>
+                </header>
+
+                <div class="people-grid">
+                    <article class="people-card">
+                        <img src="images/card-service-general-repair.jpeg" alt="General auto repair">
+                        <h3>General Auto Repair</h3>
+                        <p>From check engine lights to suspension, we handle everyday repairs.</p>
+                        <a href="services.html" class="link-more">Learn More</a>
+                    </article>
+                    <article class="people-card">
+                        <img src="images/card-service-towing.jpeg" alt="Towing service">
+                        <h3>Towing &amp; Roadside Assistance</h3>
+                        <p>Stuck on the road? We'll help get your vehicle safely to our shop.</p>
+                        <a href="towing.html" class="link-more">Learn More</a>
+                    </article>
+                    <article class="people-card">
+                        <img src="images/card-service-brakes.jpeg" alt="Brake services">
+                        <h3>Brake Repair &amp; Service</h3>
+                        <p>Noise, vibration, or longer stopping distance? Let us inspect your brakes.</p>
+                        <a href="brakes.html" class="link-more">Learn More</a>
+                    </article>
+                    <article class="people-card">
+                        <img src="images/card-service-oil-change.jpeg" alt="Oil change service">
+                        <h3>Oil Change Services</h3>
+                        <p>Keep your engine protected with timely oil and filter changes.</p>
+                        <a href="services.html" class="link-more">Learn More</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="container footer-grid">
+                <div class="footer-column">
+                    <h4>Auto Services</h4>
+                    <ul>
+                        <li><a href="services.html">Oil Change</a></li>
+                        <li><a href="brakes.html">Brakes</a></li>
+                        <li><a href="services.html">Wheel Alignment</a></li>
+                        <li><a href="services.html">Battery Service</a></li>
+                        <li><a href="services.html">Inspections</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Offers &amp; Financing</h4>
+                    <ul>
+                        <li><a href="coupons.html">Coupons &amp; Specials</a></li>
+                        <li><a href="coupons.html">Seasonal Offers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About [SHOP NAME]</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column footer-contact">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li>
+                            <img src="icons/icon-phone.jpeg" alt="Phone icon">
+                            <a href="tel:YOUR_PHONE_NUMBER">YOUR_PHONE_NUMBER</a>
+                        </li>
+                        <li>
+                            <img src="icons/icon-email.jpeg" alt="Email icon">
+                            <a href="mailto:YOUR_EMAIL_ADDRESS">YOUR_EMAIL_ADDRESS</a>
+                        </li>
+                        <li>
+                            <img src="icons/icon-location.jpeg" alt="Location icon">
+                            <span>YOUR ADDRESS LINE 1<br>YOUR CITY, STATE ZIP</span>
+                        </li>
+                        <li>
+                            <img src="icons/icon-clock.jpeg" alt="Clock icon">
+                            <span>Mon–Fri: 8am–6pm<br>Sat: 9am–3pm</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container footer-bottom-inner">
+                <p>&copy; <span id="current-year"></span> [SHOP NAME]. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===================== ALL JAVASCRIPT BELOW ===================== -->
+    <script src="js/config.js"></script>
+    <script>
+    // ========== SESSION MANAGER ==========
+    console.log('🔐 Session manager starting...');
+    
+    // Check if user data exists in sessionStorage
+    try {
+        const storedUser = sessionStorage.getItem('autoShopUser');
+        if (storedUser) {
+            window.sessionUser = JSON.parse(storedUser);
+            console.log('✅ Session restored from storage for:', window.sessionUser.user.email);
+        }
+    } catch (e) {
+        console.warn('⚠️ Could not restore session:', e);
+    }
+    
+    window.getCurrentUser = function() {
+        return window.sessionUser || null;
+    };
+    
+    window.logout = function() {
+        delete window.sessionUser;
+        try {
+            sessionStorage.removeItem('autoShopUser');
+            console.log('✅ Session cleared from storage');
+        } catch (e) {
+            console.warn('Could not clear sessionStorage:', e);
+        }
+        console.log('👋 User logged out');
+        window.location.reload();
+    };
+    
+    window.isLoggedIn = function() {
+        return !!(window.sessionUser && window.sessionUser.loggedIn);
+    };
+    
+    if (window.sessionUser && window.sessionUser.loggedIn) {
+        console.log('✅ Active session found for:', window.sessionUser.user.email);
+    } else {
+        console.log('ℹ️ No active session');
+    }
+    
+    console.log('✅ Session manager ready');
+    </script>
+
+    <script>
+    // ========== MAIN FUNCTIONALITY ==========
+    (function() {
+        'use strict';
+        console.log('🔧 main.js starting...');
+
+        // Mobile Navigation Toggle
+        function initMobileNav() {
+            const navToggle = document.querySelector('.nav-toggle');
+            const mainNav = document.querySelector('.main-nav');
+            
+            if (navToggle && mainNav) {
+                navToggle.addEventListener('click', function() {
+                    mainNav.classList.toggle('open');
+                    const isOpen = mainNav.classList.contains('open');
+                    navToggle.setAttribute('aria-expanded', isOpen);
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!navToggle.contains(e.target) && !mainNav.contains(e.target)) {
+                        mainNav.classList.remove('open');
+                        navToggle.setAttribute('aria-expanded', 'false');
+                    }
+                });
+
+                // Close menu when clicking nav links
+                const navLinks = mainNav.querySelectorAll('a');
+                navLinks.forEach(function(link) {
+                    link.addEventListener('click', function() {
+                        mainNav.classList.remove('open');
+                        navToggle.setAttribute('aria-expanded', 'false');
+                    });
+                });
+            }
+        }
+
+        // Update Footer Year
+        function updateFooterYear() {
+            const yearSpan = document.getElementById('current-year');
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+        }
+
+        // Check Login Status and Update Button
+        function checkLoginStatus() {
+            const loginBtn = document.getElementById('loginButton');
+            
+            if (window.sessionUser && window.sessionUser.loggedIn) {
+                console.log('✅ User logged in:', window.sessionUser.user.name);
+                
+                if (loginBtn) {
+                    const firstName = window.sessionUser.user.name.split(' ')[0];
+                    loginBtn.textContent = 'Hi, ' + firstName;
+                    loginBtn.href = '#';
+                    
+                    // Don't use btn-outline class in header (it's for dark backgrounds)
+                    // Instead, use custom styling for the header
+                    loginBtn.classList.remove('btn-primary');
+                    loginBtn.classList.remove('btn-outline');
+                    
+                    // Custom styling for logged-in state in header
+                    loginBtn.style.backgroundColor = 'transparent';
+                    loginBtn.style.color = '#e0242a';  // Primary red color
+                    loginBtn.style.borderColor = '#e0242a';  // Primary red border
+                    loginBtn.style.boxShadow = 'none';
+                    
+                    // Remove old listeners by cloning
+                    const newBtn = loginBtn.cloneNode(true);
+                    loginBtn.parentNode.replaceChild(newBtn, loginBtn);
+                    
+                    // Add logout functionality
+                    newBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (confirm('Are you sure you want to log out?')) {
+                            // Clear session
+                            delete window.sessionUser;
+                            try {
+                                sessionStorage.removeItem('autoShopUser');
+                                console.log('✅ Session cleared from storage');
+                            } catch (err) {
+                                console.warn('Could not clear sessionStorage:', err);
+                            }
+                            window.location.reload();
+                        }
+                    });
+                    
+                    console.log('✅ Login button updated to: Hi, ' + firstName);
+                }
+            } else {
+                console.log('ℹ️ User not logged in');
+            }
+        }
+
+        // Set minimum date for date inputs
+        function setMinDateForInputs() {
+            const dateInputs = document.querySelectorAll('input[type="date"]');
+            const today = new Date().toISOString().split('T')[0];
+            dateInputs.forEach(function(input) {
+                input.setAttribute('min', today);
+            });
+        }
+
+        // Scroll to Top Button
+        function initScrollToTop() {
+            const scrollBtn = document.createElement('button');
+            scrollBtn.innerHTML = '↑';
+            scrollBtn.setAttribute('aria-label', 'Scroll to top');
+            scrollBtn.style.cssText = 
+                'position:fixed;bottom:30px;right:30px;width:50px;height:50px;' +
+                'border-radius:50%;background:#e0242a;color:white;border:none;' +
+                'font-size:20px;cursor:pointer;display:none;z-index:999;' +
+                'box-shadow:0 4px 12px rgba(224,36,42,0.4);transition:all 0.3s;';
+
+            document.body.appendChild(scrollBtn);
+
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    scrollBtn.style.display = 'block';
+                } else {
+                    scrollBtn.style.display = 'none';
+                }
+            });
+
+            scrollBtn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            scrollBtn.addEventListener('mouseenter', function() {
+                scrollBtn.style.transform = 'scale(1.1)';
+            });
+
+            scrollBtn.addEventListener('mouseleave', function() {
+                scrollBtn.style.transform = 'scale(1)';
+            });
+        }
+
+        // Initialize All Functions
+        function init() {
+            initMobileNav();
+            updateFooterYear();
+            checkLoginStatus();
+            setMinDateForInputs();
+            initScrollToTop();
+            console.log('✅ All main functions initialized');
+        }
+
+        // Run on DOM ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+        console.log('%c🚗 Welcome to our Auto Repair Shop Website!', 'color: #e0242a; font-size: 16px; font-weight: bold;');
+    })();
+    </script>
+
+    <script>
+    // ========== FORM HANDLER ==========
+    (function() {
+        'use strict';
+        console.log('📝 form-handler.js starting...');
+
+        const API_URL = window.API_URL || 'http://localhost:3000/api';
+
+        // Show Nice Modal Instead of Alert
+        function showMessage(message, isSuccess) {
+            // Remove existing modals
+            const existingModal = document.querySelector('.custom-modal');
+            const existingOverlay = document.getElementById('modal-overlay');
+            if (existingModal) existingModal.remove();
+            if (existingOverlay) existingOverlay.remove();
+
+            const modal = document.createElement('div');
+            modal.className = 'custom-modal';
+            modal.style.cssText = 
+                'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);' +
+                'background:white;padding:30px 40px;border-radius:12px;' +
+                'box-shadow:0 10px 40px rgba(0,0,0,0.3);z-index:10000;' +
+                'max-width:400px;text-align:center;animation:slideIn 0.3s ease;';
+            
+            const icon = isSuccess ? '✅' : '❌';
+            const color = isSuccess ? '#155724' : '#721c24';
+            
+            modal.innerHTML = 
+                '<div style="font-size:48px;margin-bottom:15px;">' + icon + '</div>' +
+                '<div style="font-size:18px;font-weight:600;color:' + color + ';margin-bottom:10px;">' +
+                (isSuccess ? 'Success!' : 'Error') + '</div>' +
+                '<div style="font-size:14px;color:#333;margin-bottom:20px;line-height:1.5;">' + message + '</div>' +
+                '<button class="close-modal-btn" style="background:#e0242a;color:white;border:none;padding:10px 25px;' +
+                'border-radius:5px;cursor:pointer;font-size:14px;font-weight:600;">OK</button>';
+            
+            const overlay = document.createElement('div');
+            overlay.id = 'modal-overlay';
+            overlay.style.cssText = 
+                'position:fixed;top:0;left:0;right:0;bottom:0;' +
+                'background:rgba(0,0,0,0.5);z-index:9999;';
+            
+            // Add animation
+            const style = document.createElement('style');
+            style.textContent = '@keyframes slideIn{from{opacity:0;transform:translate(-50%,-60%);}to{opacity:1;transform:translate(-50%,-50%);}}';
+            document.head.appendChild(style);
+            
+            document.body.appendChild(overlay);
+            document.body.appendChild(modal);
+            
+            // Close button
+            modal.querySelector('.close-modal-btn').addEventListener('click', function() {
+                modal.remove();
+                overlay.remove();
+            });
+
+            // Click overlay to close
+            overlay.addEventListener('click', function() {
+                modal.remove();
+                overlay.remove();
+            });
+            
+            // Auto close success messages after 5 seconds
+            if (isSuccess) {
+                setTimeout(function() {
+                    if (modal.parentElement) modal.remove();
+                    if (overlay.parentElement) overlay.remove();
+                }, 5000);
+            }
+        }
+
+        // Handle Appointment Forms
+        function handleAppointmentForms() {
+            const form = document.getElementById('heroAppointmentForm');
+            
+            if (!form) {
+                console.log('⚠️ No appointment form found');
+                return;
+            }
+
+            console.log('✅ Found appointment form');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('📅 Appointment form submitted');
+                
+                const formData = new FormData(form);
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn ? submitBtn.textContent : '';
+                
+                const data = {
+                    name: formData.get('name'),
+                    email: formData.get('email') || '',
+                    phone: formData.get('phone'),
+                    service: formData.get('service'),
+                    preferredDate: formData.get('preferred_date'),
+                    message: formData.get('message') || ''
+                };
+                
+                // Check honeypot
+                if (formData.get('website')) {
+                    console.log('🛡️ Spam blocked');
+                    return false;
+                }
+                
+                // Validation
+                if (!data.name || !data.phone || !data.service) {
+                    showMessage('Please fill in all required fields.', false);
+                    return;
+                }
+                
+                // Show loading
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Sending...';
+                }
+                
+                console.log('📤 Sending appointment data:', data);
+                
+                fetch(API_URL + '/appointments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(result) {
+                    console.log('📥 Response:', result);
+                    
+                    if (result.message) {
+                        showMessage(result.message + '\n\nWe will contact you shortly to confirm your appointment!', true);
+                        form.reset();
+                    } else {
+                        showMessage(result.error || 'Something went wrong. Please try again.', false);
+                    }
+                })
+                .catch(function(error) {
+                    console.error('❌ Error:', error);
+                    showMessage('Connection error. Please check your internet connection.', false);
+                })
+                .finally(function() {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                    }
+                });
+            });
+
+            console.log('✅ Appointment form handler attached');
+        }
+
+        // Initialize
+        function init() {
+            handleAppointmentForms();
+            console.log('✅ Form handlers initialized');
+        }
+
+        // Run on DOM ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
+    </script>
+
+</body>
+</html>

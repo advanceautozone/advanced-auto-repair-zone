@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Login | Auto Service</title>
+    <meta name="description" content="Log in to view your service history, appointments, and manage your account.">
+    <link rel="icon" type="image/png" href="images/favicon-512.jpeg" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <style>
+        .login-container {
+            min-height: calc(100vh - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ea 100%);
+        }
+
+        .login-box {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-dark);
+        }
+
+        .login-header p {
+            color: var(--color-muted);
+            font-size: 0.95rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--color-muted);
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .form-tab {
+            display: none;
+        }
+
+        .form-tab.active {
+            display: block;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .login-form label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--color-dark);
+            font-size: 0.9rem;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+            background-color: #ffffff;
+            color: var(--color-text);
+        }
+
+        .login-form input:focus {
+            border-color: var(--color-primary);
+            outline: none;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--color-muted);
+            font-size: 0.85rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .toggle-password:hover {
+            color: var(--color-primary);
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: var(--color-primary);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.85rem;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .alert-error {
+            background-color: #fee;
+            color: #c00;
+            border: 1px solid #fcc;
+        }
+
+        .alert-success {
+            background-color: #efe;
+            color: #0a0;
+            border: 1px solid #cfc;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .btn-google {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 0.75rem;
+            background: #ffffff;
+            color: #444;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-google:hover {
+            background: #f8f8f8;
+            border-color: #d0d0d0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-decoration: none;
+        }
+
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navigation -->
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <img src="images/logo-horizontal.png" alt="Auto Service Logo">
+            </a>
+
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span class="nav-toggle-line"></span>
+                <span class="nav-toggle-line"></span>
+                <span class="nav-toggle-line"></span>
+            </button>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="services.html">Auto Services</a></li>
+                    <li><a href="coupons.html">Coupons</a></li>
+                    <li><a href="towing.html">Towing</a></li>
+                    <li><a href="brakes.html">Brakes</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-cta">
+                <a href="tel:YOUR_PHONE_NUMBER" class="header-phone">Call: YOUR_PHONE_NUMBER</a>
+                <a href="contact.html" class="btn btn-primary">Book Appointment</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>Welcome</h1>
+                <p>Log in or create an account</p>
+            </div>
+
+            <!-- Tab Buttons -->
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="login">Log In</button>
+                <button class="tab-btn" data-tab="register">Sign Up</button>
+            </div>
+
+            <!-- Alert messages -->
+            <div id="alert-container"></div>
+
+            <!-- Login Form -->
+            <div id="login-tab" class="form-tab active">
+                <form class="login-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="login-email">Email Address</label>
+                        <input 
+                            type="email" 
+                            id="login-email" 
+                            name="email" 
+                            placeholder="your.email@example.com"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <div class="password-wrapper">
+                            <input 
+                                type="password" 
+                                id="login-password" 
+                                name="password" 
+                                placeholder="Enter your password"
+                                required
+                            >
+                            <button type="button" class="toggle-password" data-target="login-password">
+                                Show
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="remember-forgot">
+                        <label class="remember-me">
+                            <input type="checkbox" name="remember" id="remember">
+                            <span>Remember me</span>
+                        </label>
+                        <a class="forgot-link" id="forgotPassword">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary login-btn">
+                        Log In
+                    </button>
+
+                    <div class="divider">
+                        <span>or continue with</span>
+                    </div>
+
+                    <a href="/auth/google" class="btn-google">
+                        <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                            <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+                            <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/>
+                            <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+                        </svg>
+                        <span>Sign in with Google</span>
+                    </a>
+                </form>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-tab" class="form-tab">
+                <form class="login-form" id="registerForm">
+                    <div class="form-group">
+                        <label for="register-name">Full Name</label>
+                        <input 
+                            type="text" 
+                            id="register-name" 
+                            name="name" 
+                            placeholder="John Doe"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-email">Email Address</label>
+                        <input 
+                            type="email" 
+                            id="register-email" 
+                            name="email" 
+                            placeholder="your.email@example.com"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-phone">Phone Number</label>
+                        <input 
+                            type="tel" 
+                            id="register-phone" 
+                            name="phone" 
+                            placeholder="(555) 123-4567"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <div class="password-wrapper">
+                            <input 
+                                type="password" 
+                                id="register-password" 
+                                name="password" 
+                                placeholder="At least 6 characters"
+                                required
+                                minlength="6"
+                            >
+                            <button type="button" class="toggle-password" data-target="register-password">
+                                Show
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary login-btn">
+                        Create Account
+                    </button>
+
+                    <div class="divider">
+                        <span>or continue with</span>
+                    </div>
+
+                    <a href="/auth/google" class="btn-google">
+                        <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                            <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+                            <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/>
+                            <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+                        </svg>
+                        <span>Sign up with Google</span>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="container footer-grid">
+                <div class="footer-column">
+                    <h4>Auto Services</h4>
+                    <ul>
+                        <li><a href="services.html">Oil Change</a></li>
+                        <li><a href="brakes.html">Brakes</a></li>
+                        <li><a href="services.html">Wheel Alignment</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column footer-contact">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li>
+                            <img src="icons/icon-phone.jpeg" alt="Phone">
+                            <a href="tel:YOUR_PHONE_NUMBER">YOUR_PHONE_NUMBER</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container footer-bottom-inner">
+                <p>&copy; <span id="current-year"></span> Auto Service. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script>
+        console.log('🔧 Login script starting...');
+        const API_URL = window.API_URL || 'http://localhost:3000/api';
+        const alertContainer = document.getElementById('alert-container');
+        
+        console.log('📋 Alert container found:', !!alertContainer);
+
+        // Tab switching
+        console.log('🔧 Setting up tab switching...');
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                console.log('📑 Tab clicked:', btn.getAttribute('data-tab'));
+                const tab = btn.getAttribute('data-tab');
+                
+                document.querySelectorAll('.tab-btn').forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                document.querySelectorAll('.form-tab').forEach(function(t) {
+                    t.classList.remove('active');
+                });
+                
+                btn.classList.add('active');
+                document.getElementById(tab + '-tab').classList.add('active');
+                alertContainer.innerHTML = '';
+            });
+        });
+
+        // Password toggle
+        document.querySelectorAll('.toggle-password').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                const targetId = btn.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                const type = input.type === 'password' ? 'text' : 'password';
+                input.type = type;
+                btn.textContent = type === 'password' ? 'Show' : 'Hide';
+            });
+        });
+
+        // Show alert
+        function showAlert(message, type) {
+            type = type || 'error';
+            alertContainer.innerHTML = '<div class="alert alert-' + type + '">' + message + '</div>';
+            setTimeout(function() {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Store token
+        function storeToken(token, user) {
+            window.sessionUser = { token: token, user: user, loggedIn: true };
+            
+            // Also store in sessionStorage so it persists across page navigation
+            try {
+                sessionStorage.setItem('autoShopUser', JSON.stringify({
+                    token: token,
+                    user: user,
+                    loggedIn: true,
+                    loginTime: new Date().toISOString()
+                }));
+                console.log('✅ Session stored in sessionStorage');
+            } catch (e) {
+                console.warn('⚠️ Could not store in sessionStorage:', e);
+            }
+            
+            console.log('✅ Session stored:', user.email);
+        }
+
+        // Login form
+        console.log('🔧 Setting up login form...');
+        const loginForm = document.getElementById('loginForm');
+        console.log('📋 Login form found:', !!loginForm);
+        
+        if (loginForm) {
+            loginForm.addEventListener('submit', function(e) {
+                console.log('🔥 LOGIN FORM SUBMITTED!');
+                e.preventDefault();
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Logging in...';
+
+            const loginData = {
+                email: form.email.value,
+                password: form.password.value
+            };
+
+            console.log('🔐 Attempting login for:', loginData.email);
+
+            fetch(API_URL + '/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(loginData)
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('📥 Login response:', data);
+
+                if (data.token && data.user) {
+                    showAlert('Login successful! Redirecting...', 'success');
+                    storeToken(data.token, data.user);
+                    
+                    console.log('✅ Login successful, redirecting in 1.5 seconds...');
+                    setTimeout(function() {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    showAlert(data.error || 'Login failed. Please try again.');
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            })
+            .catch(function(error) {
+                console.error('❌ Login error:', error);
+                showAlert('Server connection error. Please make sure the backend is running.');
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            });
+        });
+        } else {
+            console.error('❌ Login form not found!');
+        }
+
+        // Register form
+        console.log('🔧 Setting up register form...');
+        const registerForm = document.getElementById('registerForm');
+        console.log('📋 Register form found:', !!registerForm);
+        
+        if (registerForm) {
+            registerForm.addEventListener('submit', function(e) {
+                console.log('🔥 REGISTER FORM SUBMITTED!');
+                e.preventDefault();
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating account...';
+
+            const registerData = {
+                name: form.name.value,
+                email: form.email.value,
+                phone: form.phone.value,
+                password: form.password.value
+            };
+
+            console.log('📝 Attempting registration for:', registerData.email);
+
+            fetch(API_URL + '/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(registerData)
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('📥 Registration response:', data);
+
+                if (data.token && data.user) {
+                    showAlert('Account created successfully! Redirecting...', 'success');
+                    storeToken(data.token, data.user);
+                    
+                    console.log('✅ Registration successful, redirecting in 1.5 seconds...');
+                    setTimeout(function() {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    showAlert(data.error || 'Registration failed. Please try again.');
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            })
+            .catch(function(error) {
+                console.error('❌ Registration error:', error);
+                showAlert('Server connection error. Please make sure the backend is running.');
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            });
+        });
+        } else {
+            console.error('❌ Register form not found!');
+        }
+
+        // Forgot password
+        document.getElementById('forgotPassword').addEventListener('click', function(e) {
+            e.preventDefault();
+            showAlert('Password reset coming soon! Please contact us for assistance.');
+        });
+
+        console.log('✅ Login page loaded and ready');
+        console.log('📊 Forms status:', {
+            loginForm: !!document.getElementById('loginForm'),
+            registerForm: !!document.getElementById('registerForm'),
+            alertContainer: !!alertContainer
+        });
+    </script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact &amp; Book Appointment | [SHOP NAME]</title>
+    <meta name="description" content="Contact [SHOP NAME] to schedule an appointment for auto repair, maintenance, brakes, alignment and more.">
+    <link rel="icon" type="image/png" href="images/favicon-512.jpeg" />
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <img src="images/logo-horizontal.png" alt="[SHOP NAME] Auto Service Logo">
+            </a>
+
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span class="nav-toggle-line"></span>
+                <span class="nav-toggle-line"></span>
+                <span class="nav-toggle-line"></span>
+            </button>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="coupons.html">Coupons</a></li>
+                    <li><a href="towing.html">Towing</a></li>
+                    <li><a href="brakes.html">Brakes</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-cta">
+                <a href="tel:YOUR_PHONE_NUMBER" class="header-phone">Call: YOUR_PHONE_NUMBER</a>
+                <a href="contact.html" class="btn btn-primary">Book Appointment</a>
+                <a href="Login.html" class="btn btn-primary" id="loginButton">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-hero">
+            <div class="container">
+                <h1>Contact &amp; Book Appointment</h1>
+                <p>Have questions or ready to schedule service? Call us or use the form below and we’ll respond as soon as possible.</p>
+            </div>
+        </section>
+
+        <section class="contact-layout">
+            <div class="container contact-grid">
+                <div class="contact-card">
+                    <h2>Our shop</h2>
+                    <ul class="contact-info-list">
+                        <li>
+                            <img src="icons/icon-location.jpeg" alt="Location icon">
+                            <span>YOUR ADDRESS LINE 1<br>YOUR CITY, STATE ZIP</span>
+                        </li>
+                        <li>
+                            <img src="icons/icon-phone.jpeg" alt="Phone icon">
+                            <a href="tel:YOUR_PHONE_NUMBER">YOUR_PHONE_NUMBER</a>
+                        </li>
+                        <li>
+                            <img src="icons/icon-email.jpeg" alt="Email icon">
+                            <a href="mailto:YOUR_EMAIL_ADDRESS">YOUR_EMAIL_ADDRESS</a>
+                        </li>
+                        <li>
+                            <img src="icons/icon-clock.jpeg" alt="Clock icon">
+                            <span>Mon–Fri: 8am–6pm<br>Sat: 9am–3pm<br>Sun: Closed</span>
+                        </li>
+                    </ul>
+                    <p>If you need towing outside of business hours, please call our phone number and follow the instructions for after‑hours assistance.</p>
+                </div>
+
+                <div class="contact-card">
+                    <h2>Request an appointment</h2>
+                    <form class="contact-form" action="backend/form-handler.php" method="POST">
+                        <input type="hidden" name="form_type" value="contact_form">
+
+                        <div class="form-group">
+                            <label for="contact-name">Name *</label>
+                            <input type="text" id="contact-name" name="name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-phone">Phone *</label>
+                            <input type="tel" id="contact-phone" name="phone" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-email">Email</label>
+                            <input type="email" id="contact-email" name="email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-service">Service Needed</label>
+                            <select id="contact-service" name="service">
+                                <option value="">Select a service</option>
+                                <option value="Air-and-Cabin-Filter-Replacement">Air and Cabin Filter Replacement</option>
+                                <option value="Air-Conditioning">Air Conditioning</option>
+                                <option value="Vehicle-Engine-Diagnostic">Vehicle Engine Diagnostic</option>
+                                <option value="battery">Battery Service</option>
+                                <option value="Brakes">Brakes</option>
+                                <option value="Oil-Change">Oil Change</option>
+                                <option value="Steering-and-Suspension-Repair">Steering and Suspension Repair</option>
+                                <option value="Transmission">Transmission</option>
+                                <option value="AC-Installation-and-Repair">A/C Installation and Repair</option>
+                                <option value="Vehicle-AC-Recharge">Vehicle A/C Recharge</option>
+                                <option value="Vehicle-AC-Replacement">Vehicle A/C Replacement</option>
+                                <option value="Vehicle-Battery-Maintenance">Vehicle Battery Maintenance</option>
+                                <option value="Vehicle-Battery-Replacement">Vehicle Battery Replacement</option>
+                                <option value="Vehicle-Brake-Repair">Vehicle Brake Repair</option>
+                                <option value="Vehicle-Brake-Replacement">Vehicle Brake Replacement</option>
+                                <option value="Vehicle-Emissions-Testing">Vehicle Emissions Testing</option>
+                                <option value="Vehicle-Engine-Tuning">Vehicle Engine Tuning</option>
+                                <option value="Vehicle-Maintenance">Vehicle Maintenance</option>
+                                <option value="Vehicle-Power-Window-Repair">Vehicle Power Window Repair</option>
+                                <option value="Carburetor-Cleaning">Carburetor Cleaning</option>
+                                <option value="Electrical-Repair">Electrical Repair</option>
+                                <option value="Engine-Repair">Engine Repair</option>
+                                <option value="General-Repairs-and-Maintenance">General Repairs & Maintenance</option>
+                                <option value="Steering-and-Suspension-Replacement">Steering and Suspension Replacement</option>
+                                <option value="Transmission-Repair">Transmission Repair</option>
+                                <option value="Transmission-Replacement">Transmission Replacement</option>
+                                <option value="Vehicle-Inspection">Vehicle Inspection</option>
+                                <option value="Vehicle-Safety-Inspection">Vehicle Safety Inspection</option>
+                                <option value="Wheel-Alignment">Wheel Alignment</option>
+                                <option value="Wiper-Blade-Installation">Wiper Blade Installation</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-date">Preferred Date</label>
+                            <input type="date" id="contact-date" name="preferred_date">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-message">Message</label>
+                            <textarea id="contact-message" name="message" placeholder="Tell us about your vehicle and any concerns."></textarea>
+                        </div>
+
+                        <!-- Honeypot -->
+                        <div class="hp-field">
+                            <label>Leave this field empty</label>
+                            <input type="text" name="website">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Submit Request</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-top">
+            <div class="container footer-grid">
+                <div class="footer-column">
+                    <h4>Auto Services</h4>
+                    <ul>
+                        <li><a href="services.html">Oil Change</a></li>
+                        <li><a href="brakes.html">Brakes</a></li>
+                        <li><a href="services.html">Wheel Alignment</a></li>
+                        <li><a href="services.html">Battery Service</a></li>
+                        <li><a href="services.html">Inspections</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Offers &amp; Financing</h4>
+                    <ul>
+                        <li><a href="coupons.html">Coupons &amp; Specials</a></li>
+                        <li><a href="coupons.html">Seasonal Offers</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About [SHOP NAME]</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column footer-contact">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li>
+                            <img src="icons/icon-phone.jpeg" alt="Phone icon">
+                            <a href="tel:YOUR_PHONE_NUMBER">YOUR_PHONE_NUMBER</a>
+                        </li>
+                        <li>
+                            <img src="icons/icon-email.jpeg" alt="Email icon">
+                            <a href="mailto:YOUR_EMAIL_ADDRESS">YOUR_EMAIL_ADDRESS</a>
+                        </li>
+                        <li>
+                            <img src="icons/icon-location.jpeg" alt="Location icon">
+                            <span>YOUR ADDRESS LINE 1<br>YOUR CITY, STATE ZIP</span>
+                        </li>
+                        <li>
+                            <img src="icons/icon-clock.jpeg" alt="Clock icon">
+                            <span>Mon–Fri: 8am–6pm<br>Sat: 9am–3pm</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container footer-bottom-inner">
+                <p>&copy; <span id="current-year"></span> [SHOP NAME]. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="js/config.js"></script>
+    <script src="js/session-manager.js"></script>
+    <script src="js/form-handler.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

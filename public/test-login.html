@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Login - Debugging</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-bottom: 20px; }
+        h2 { color: #555; margin: 25px 0 15px; font-size: 18px; }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button {
+            background: #e0242a;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px 5px 5px 0;
+        }
+        button:hover { background: #b01b21; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        pre {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Backend Connection Test</h1>
+        
+        <div class="section">
+            <h2>Step 1: Check Backend Status</h2>
+            <button onclick="checkBackend()">Test Backend Connection</button>
+            <div id="backend-status"></div>
+        </div>
+
+        <div class="section">
+            <h2>Step 2: Register New User</h2>
+            <label>Name:</label>
+            <input type="text" id="reg-name" value="Test User">
+            
+            <label>Email:</label>
+            <input type="email" id="reg-email" value="test@example.com">
+            
+            <label>Password:</label>
+            <input type="password" id="reg-password" value="password123">
+            
+            <label>Phone:</label>
+            <input type="tel" id="reg-phone" value="555-1234">
+            
+            <button onclick="testRegister()">Register User</button>
+            <div id="register-status"></div>
+        </div>
+
+        <div class="section">
+            <h2>Step 3: Login</h2>
+            <label>Email:</label>
+            <input type="email" id="login-email" value="test@example.com">
+            
+            <label>Password:</label>
+            <input type="password" id="login-password" value="password123">
+            
+            <button onclick="testLogin()">Login</button>
+            <div id="login-status"></div>
+        </div>
+
+        <div class="section">
+            <h2>Debug Console</h2>
+            <pre id="debug-console">Waiting for tests...</pre>
+        </div>
+    </div>
+    <script src="js/config.js"></script>
+    <script>
+        const API_URL = window.API_URL || 'http://localhost:3000/api';
+        let debugLog = [];
+
+        function log(message, type) {
+            type = type || 'info';
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog.push('[' + timestamp + '] ' + type.toUpperCase() + ': ' + message);
+            const consoleEl = document.getElementById('debug-console');
+            if (consoleEl) {
+                consoleEl.textContent = debugLog.join('\n');
+                consoleEl.scrollTop = consoleEl.scrollHeight;
+            }
+        }
+
+        function showStatus(elementId, message, isSuccess) {
+            const el = document.getElementById(elementId);
+            if (el) {
+                el.innerHTML = '<div class="status ' + (isSuccess ? 'success' : 'error') + '">' + message + '</div>';
+            }
+        }
+
+        function checkBackend() {
+            log('Checking backend connection...', 'info');
+            const statusEl = document.getElementById('backend-status');
+            if (statusEl) {
+                statusEl.innerHTML = '<div class="status info">Testing connection...</div>';
+            }
+            
+            fetch(API_URL + '/auth/me')
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data.error && data.error.includes('Access denied')) {
+                        showStatus('backend-status', '✅ Backend is RUNNING and responding correctly!', true);
+                        log('Backend connection successful', 'success');
+                    } else {
+                        showStatus('backend-status', '⚠️ Backend responded but with unexpected response', false);
+                        log('Unexpected response: ' + JSON.stringify(data), 'warning');
+                    }
+                })
+                .catch(function(error) {
+                    showStatus('backend-status', '❌ Cannot connect to backend! Error: ' + error.message, false);
+                    log('Connection failed: ' + error.message, 'error');
+                });
+        }
+
+        function testRegister() {
+            log('Attempting registration...', 'info');
+            const statusEl = document.getElementById('register-status');
+            if (statusEl) {
+                statusEl.innerHTML = '<div class="status info">Registering...</div>';
+            }
+            
+            const data = {
+                name: document.getElementById('reg-name').value,
+                email: document.getElementById('reg-email').value,
+                password: document.getElementById('reg-password').value,
+                phone: document.getElementById('reg-phone').value
+            };
+            
+            log('Registration data: ' + JSON.stringify(data), 'info');
+            
+            fetch(API_URL + '/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(result) {
+                log('Registration response: ' + JSON.stringify(result), 'info');
+                
+                if (result.token) {
+                    showStatus('register-status', '✅ Registration successful! Token: ' + result.token.substring(0, 20) + '...', true);
+                    log('Registration successful', 'success');
+                    
+                    document.getElementById('login-email').value = data.email;
+                    document.getElementById('login-password').value = data.password;
+                } else {
+                    showStatus('register-status', '❌ Registration failed: ' + (result.error || 'Unknown error'), false);
+                    log('Registration failed: ' + (result.error || 'Unknown error'), 'error');
+                }
+            })
+            .catch(function(error) {
+                showStatus('register-status', '❌ Connection error: ' + error.message, false);
+                log('Registration error: ' + error.message, 'error');
+            });
+        }
+
+        function testLogin() {
+            log('Attempting login...', 'info');
+            const statusEl = document.getElementById('login-status');
+            if (statusEl) {
+                statusEl.innerHTML = '<div class="status info">Logging in...</div>';
+            }
+            
+            const data = {
+                email: document.getElementById('login-email').value,
+                password: document.getElementById('login-password').value
+            };
+            
+            log('Login data: ' + JSON.stringify(data), 'info');
+            
+            fetch(API_URL + '/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(result) {
+                log('Login response: ' + JSON.stringify(result), 'info');
+                
+                if (result.token) {
+                    showStatus('login-status', '✅ Login successful! User: ' + result.user.name + '<br>Token: ' + result.token.substring(0, 30) + '...', true);
+                    log('Login successful for user: ' + result.user.email, 'success');
+                    
+                    window.sessionUser = {
+                        token: result.token,
+                        user: result.user,
+                        loggedIn: true
+                    };
+                    
+                    log('Session stored. Ready to redirect!', 'success');
+                } else {
+                    showStatus('login-status', '❌ Login failed: ' + (result.error || 'Unknown error'), false);
+                    log('Login failed: ' + (result.error || 'Unknown error'), 'error');
+                }
+            })
+            .catch(function(error) {
+                showStatus('login-status', '❌ Connection error: ' + error.message, false);
+                log('Login error: ' + error.message, 'error');
+            });
+        }
+
+        // Auto-check backend on load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                log('Page loaded. Ready for testing.', 'info');
+                setTimeout(checkBackend, 500);
+            });
+        } else {
+            log('Page loaded. Ready for testing.', 'info');
+            setTimeout(checkBackend, 500);
+        }
+    </script>
+</body>
+</html>
