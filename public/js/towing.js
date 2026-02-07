@@ -10,7 +10,7 @@
     // CONFIGURATION - UPDATE THESE VALUES
     // ============================================
     const SHOP_CONFIG = {
-        name: '[SHOP NAME]',                              // Your shop name
+        name: 'Advanced Auto Repair Zone',                              // Your shop name
         address: '190-20 99th Ave, Hollis,, NY 11423, United States', // Your full address
         lat: 43.6532,                                     // Your shop's latitude
         lng: -79.3832,                                    // Your shop's longitude
