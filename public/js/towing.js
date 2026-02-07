@@ -14,7 +14,7 @@
         address: 'YOUR ADDRESS LINE 1, YOUR CITY, STATE ZIP', // Your full address
         lat: 43.6532,                                     // Your shop's latitude
         lng: -79.3832,                                    // Your shop's longitude
-        phone: 'YOUR_PHONE_NUMBER'                        // Your phone number
+        phone: 'Call: +17186742455'                        // Your phone number
     };
 
     // Pricing configuration
