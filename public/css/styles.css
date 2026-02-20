@@ -151,6 +151,7 @@ p {
 
 .main-nav {
     display: flex;
+    background-color: #000;
 }
 
 .main-nav ul {
