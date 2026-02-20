@@ -737,7 +737,7 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log('🚀 AUTO SHOP BACKEND SERVER');
     console.log('='.repeat(50));
     console.log(`📍 Server running on: http://localhost:${PORT}`);
-    conosle.log("Admin Login ULR : https://advancedautorepairzone.com/admin-login.html")
+    // conosle.log("Admin Login ULR : https://advancedautorepairzone.com/admin-login.html")
     console.log(`📁 Serving static files from: 'public' folder`);
     console.log(`🔐 JWT Secret: ${JWT_SECRET.substring(0, 10)}...`);
     console.log(`💾 MongoDB URI: ${MONGODB_URI}`);
