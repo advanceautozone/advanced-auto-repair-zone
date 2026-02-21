@@ -103,8 +103,8 @@ p {
 
 .btn-outline {
     background-color: transparent;
-    color: #ffffff;
-    border-color: #ffffff;
+    color: #000000;
+    border-color: #000000;
 }
 
 .btn-outline:hover {
@@ -819,6 +819,12 @@ textarea:focus {
     }
 
     .header-cta {
+        display: flex; /* was: display: none */
+    }
+
+    /* Hide phone number and Book Appointment — keep only Login */
+    .header-phone,
+    .header-cta .btn:not(#loginButton) {
         display: none;
     }
 
