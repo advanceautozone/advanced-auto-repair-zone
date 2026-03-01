@@ -3,366 +3,1003 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Auto Shop</title>
+    <title>Admin Dashboard — Advanced Auto Repair Zone</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDu_tj6EmgI40BTGl6AiXCeeNZ38jwGTMI&libraries=places"></script>
     <style>
+        :root {
+            --red: #e0242a;
+            --red-dark: #b01b21;
+            --red-light: #fff0f0;
+            --bg: #0f0f10;
+            --surface: #1a1a1d;
+            --surface2: #232327;
+            --surface3: #2d2d32;
+            --border: rgba(255,255,255,0.07);
+            --text: #f0f0f2;
+            --text-muted: #888892;
+            --text-dim: #555560;
+            --green: #22c55e;
+            --blue: #3b82f6;
+            --amber: #f59e0b;
+            --radius: 12px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.4);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+
         body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background: #f5f5f7;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
         }
 
-        .admin-header {
-            background: #1f1f1f;
-            color: white;
-            padding: 1rem 2rem;
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--surface); }
+        ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            height: 64px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
         }
 
-        .admin-header h1 {
-            font-size: 1.5rem;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--red);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .logo-text {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .admin-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            padding: 0.4rem 0.85rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+        }
+
+        .admin-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
         }
 
         .logout-btn {
-            background: #e0242a;
-            color: white;
-            border: none;
-            padding: 0.5rem 1.5rem;
-            border-radius: 5px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: all 0.2s;
         }
 
         .logout-btn:hover {
-            background: #b01b21;
+            border-color: var(--red);
+            color: var(--red);
         }
 
-        .container {
+        /* ===== MAIN LAYOUT ===== */
+        .main {
             max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 2rem;
+            margin: 0 auto;
+            padding: 2rem;
         }
 
+        /* ===== STATS ===== */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
             margin-bottom: 2rem;
         }
 
         .stat-card {
-            background: white;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
             padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s;
         }
 
-        .stat-card h3 {
-            color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: var(--accent-color, var(--red));
+            opacity: 0.6;
+        }
+
+        .stat-card:hover { border-color: rgba(255,255,255,0.12); }
+
+        .stat-label {
+            font-size: 0.75rem;
             text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 0.75rem;
         }
 
-        .stat-number {
-            font-size: 2.5rem;
+        .stat-value {
+            font-size: 2.4rem;
             font-weight: 700;
-            color: #e0242a;
+            letter-spacing: -0.03em;
+            font-family: 'DM Mono', monospace;
+            line-height: 1;
         }
 
-        .tabs {
+        .stat-card.red .stat-value { color: var(--red); }
+        .stat-card.amber .stat-value { color: var(--amber); --accent-color: var(--amber); }
+        .stat-card.green .stat-value { color: var(--green); --accent-color: var(--green); }
+        .stat-card.blue .stat-value { color: var(--blue); --accent-color: var(--blue); }
+
+        /* ===== TABS ===== */
+        .tabs-wrapper {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .tabs-header {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 2px solid #e0e0e0;
+            border-bottom: 1px solid var(--border);
+            padding: 0 1.5rem;
+            gap: 0.25rem;
         }
 
         .tab-btn {
             background: none;
             border: none;
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
-            font-weight: 600;
+            color: var(--text-muted);
+            padding: 1rem 1.25rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 500;
             cursor: pointer;
-            color: #666;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
         }
 
-        .tab-btn.active {
-            color: #e0242a;
-            border-bottom-color: #e0242a;
+        .tab-btn:hover { color: var(--text); }
+        .tab-btn.active { color: var(--red); border-bottom-color: var(--red); }
+
+        .tab-body { padding: 1.5rem; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ===== SEARCH ===== */
+        .search-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            align-items: center;
         }
 
-        .tab-content {
-            display: none;
+        .search-input-wrap {
+            flex: 1;
+            position: relative;
         }
 
-        .tab-content.active {
-            display: block;
+        .search-input-wrap svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
         }
 
-        .data-table {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        .search-input {
+            width: 100%;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.65rem 0.75rem 0.65rem 2.5rem;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
         }
+
+        .search-input:focus {
+            outline: none;
+            border-color: rgba(224,36,42,0.4);
+        }
+
+        .search-input::placeholder { color: var(--text-dim); }
+
+        .refresh-btn {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.65rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .refresh-btn:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
+
+        /* ===== TABLE ===== */
+        .table-wrap { overflow-x: auto; }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 0.875rem;
         }
 
-        thead {
-            background: #f8f8f8;
-        }
-
-        th {
+        thead th {
             text-align: left;
-            padding: 1rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: 0.875rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td { border-bottom: none; }
+
+        tbody tr {
+            transition: background 0.15s;
+        }
+
+        tbody tr:hover { background: rgba(255,255,255,0.025); }
+
+        .cell-name { font-weight: 600; }
+        .cell-phone { font-family: 'DM Mono', monospace; font-size: 0.82rem; color: var(--text-muted); }
+        .cell-service { color: var(--text-muted); }
+
+        /* ===== BADGES ===== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
             font-weight: 600;
-            color: #333;
-            border-bottom: 2px solid #e0e0e0;
+            letter-spacing: 0.02em;
         }
 
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid #f0f0f0;
+        .badge::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
         }
 
-        tbody tr:hover {
-            background: #f9f9f9;
-        }
+        .badge-pending { background: rgba(245,158,11,0.12); color: var(--amber); }
+        .badge-confirmed { background: rgba(59,130,246,0.12); color: var(--blue); }
+        .badge-completed { background: rgba(34,197,94,0.12); color: var(--green); }
+        .badge-cancelled { background: rgba(224,36,42,0.1); color: var(--red); }
 
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
+        /* ===== ACTION BUTTONS ===== */
+        .actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
 
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .status-confirmed {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-
-        .status-completed {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-cancelled {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .action-btn {
-            padding: 0.35rem 0.75rem;
-            border: none;
-            border-radius: 5px;
+        .act-btn {
+            padding: 0.3rem 0.7rem;
+            border-radius: 6px;
+            border: 1px solid transparent;
             cursor: pointer;
-            font-size: 0.85rem;
-            margin-right: 0.5rem;
+            font-family: inherit;
+            font-size: 0.78rem;
             font-weight: 600;
+            transition: all 0.15s;
+            white-space: nowrap;
         }
 
-        .btn-confirm {
-            background: #28a745;
-            color: white;
-        }
+        .act-details { background: var(--surface3); color: var(--text); border-color: var(--border); }
+        .act-details:hover { border-color: rgba(255,255,255,0.2); }
+        .act-confirm { background: rgba(34,197,94,0.1); color: var(--green); border-color: rgba(34,197,94,0.2); }
+        .act-confirm:hover { background: rgba(34,197,94,0.2); }
+        .act-complete { background: rgba(59,130,246,0.1); color: var(--blue); border-color: rgba(59,130,246,0.2); }
+        .act-complete:hover { background: rgba(59,130,246,0.2); }
+        .act-cancel { background: rgba(245,158,11,0.1); color: var(--amber); border-color: rgba(245,158,11,0.2); }
+        .act-cancel:hover { background: rgba(245,158,11,0.2); }
+        .act-delete { background: rgba(224,36,42,0.1); color: var(--red); border-color: rgba(224,36,42,0.2); }
+        .act-delete:hover { background: rgba(224,36,42,0.2); }
 
-        .btn-complete {
-            background: #17a2b8;
-            color: white;
-        }
-
-        .btn-cancel {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-delete {
-            background: #6c757d;
-            color: white;
-        }
-
-        .action-btn:hover {
-            opacity: 0.8;
-        }
-
-        .empty-state {
+        .empty-row td {
             text-align: center;
             padding: 3rem;
-            color: #999;
+            color: var(--text-dim);
         }
 
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: #666;
+        /* ===== MODAL OVERLAY ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
         }
 
-        .search-box {
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: white;
-            border-radius: 8px;
-        }
+        .modal-overlay.open { display: flex; }
 
-        .search-box input {
+        /* ===== DETAILS MODAL ===== */
+        .details-modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
             width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 1rem;
+            max-width: 820px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+            animation: modalIn 0.25s ease;
         }
 
-        .search-box input:focus {
-            outline: none;
-            border-color: #e0242a;
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(16px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
-            }
+        /* ===== MODAL PRINT ZONE ===== */
+        #printZone {
+            padding: 2rem;
+        }
 
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
+        .modal-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1.75rem;
+            gap: 1rem;
+        }
 
-            .tabs {
-                overflow-x: auto;
-            }
+        .modal-title-block {}
 
-            .data-table {
-                overflow-x: auto;
-            }
+        .modal-eyebrow {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+            margin-bottom: 0.35rem;
+        }
 
-            table {
-                min-width: 600px;
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .modal-id {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-top: 0.25rem;
+        }
+
+        .modal-header-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .mha-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .mha-btn:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
+        .mha-btn.pdf-btn:hover { border-color: rgba(224,36,42,0.4); color: var(--red); }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .close-btn:hover { border-color: var(--red); color: var(--red); }
+
+        /* ===== INFO GRID ===== */
+        .info-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+            font-weight: 600;
+            margin-bottom: 0.85rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .info-grid.cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .info-item {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+        }
+
+        .info-item-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--text-dim);
+            font-weight: 500;
+            margin-bottom: 0.35rem;
+        }
+
+        .info-item-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text);
+            word-break: break-word;
+        }
+
+        .info-item-value a {
+            color: var(--blue);
+            text-decoration: none;
+        }
+
+        .info-item-value a:hover { text-decoration: underline; }
+
+        .info-item-value.mono {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.875rem;
+        }
+
+        .info-item-value.cost {
+            font-family: 'DM Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--green);
+        }
+
+        .info-item-value.urgent-yes {
+            color: var(--red);
+            font-weight: 700;
+        }
+
+        .message-box {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        /* ===== STATUS CHANGE ===== */
+        .status-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-row-label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .status-row-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+        /* ===== MAP ===== */
+        .map-container {
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            height: 260px;
+            margin-top: 0.5rem;
+            position: relative;
+        }
+
+        #detailMap {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-no-location {
+            width: 100%;
+            height: 100%;
+            background: var(--surface2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            gap: 0.5rem;
+        }
+
+        .open-maps-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.75rem;
+            padding: 0.55rem 1.1rem;
+            background: rgba(59,130,246,0.1);
+            border: 1px solid rgba(59,130,246,0.25);
+            color: var(--blue);
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .open-maps-btn:hover { background: rgba(59,130,246,0.2); }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--surface3);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.25s;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== PRINT / PDF STYLES ===== */
+        @media print {
+            body * { visibility: hidden; }
+            #printZone, #printZone * { visibility: visible; }
+            #printZone {
+                position: fixed;
+                inset: 0;
+                background: white;
+                color: black;
+                padding: 2.5rem;
+                font-family: 'DM Sans', sans-serif;
             }
+            .modal-header-actions,
+            .close-btn,
+            .status-row,
+            .open-maps-btn { display: none !important; }
+
+            .info-item { background: #f8f8f8 !important; border-color: #ddd !important; }
+            .info-item-label { color: #888 !important; }
+            .info-item-value { color: #111 !important; }
+            .section-label { color: #aaa !important; border-color: #ddd !important; }
+            .message-box { background: #f8f8f8 !important; color: #444 !important; border-color: #ddd !important; }
+            .modal-title { color: #111 !important; }
+            .modal-eyebrow, .modal-id { color: #aaa !important; }
+            .map-container { display: none; }
+
+            .print-shop-header {
+                display: flex !important;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 1.5rem;
+                padding-bottom: 1rem;
+                border-bottom: 2px solid #e0242a;
+            }
+            .print-shop-name { font-size: 1.2rem; font-weight: 700; color: #e0242a !important; }
+            .print-shop-contact { font-size: 0.8rem; color: #666 !important; text-align: right; }
+        }
+
+        .print-shop-header { display: none; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 640px) {
+            .main { padding: 1rem; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+            .info-grid { grid-template-columns: 1fr; }
+            .info-grid.cols-3 { grid-template-columns: 1fr 1fr; }
+            .modal-top { flex-direction: column; }
+            .modal-header-actions { flex-wrap: wrap; }
+            .header { padding: 0 1rem; }
         }
     </style>
 </head>
 <body>
 
-    <header class="admin-header">
-        <h1>🔧 Admin Dashboard</h1>
-        <button class="logout-btn" onclick="logout()">Logout</button>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="header-logo">
+                <div class="logo-icon">🔧</div>
+                <div>
+                    <div class="logo-text">Auto Repair Zone</div>
+                    <div class="logo-sub">Admin Panel</div>
+                </div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="admin-pill">
+                <div class="admin-dot"></div>
+                <span>Administrator</span>
+            </div>
+            <button class="logout-btn" onclick="logout()">Sign Out</button>
+        </div>
     </header>
 
-    <div class="container">
-        <!-- Statistics -->
+    <!-- Main -->
+    <div class="main">
+
+        <!-- Stats -->
         <div class="stats-grid">
-            <div class="stat-card">
-                <h3>Total Users</h3>
-                <div class="stat-number" id="totalUsers">0</div>
+            <div class="stat-card red">
+                <div class="stat-label">Total Users</div>
+                <div class="stat-value" id="totalUsers">—</div>
             </div>
-            <div class="stat-card">
-                <h3>Pending Appointments</h3>
-                <div class="stat-number" id="pendingAppointments">0</div>
+            <div class="stat-card amber">
+                <div class="stat-label">Pending</div>
+                <div class="stat-value" id="pendingAppointments">—</div>
             </div>
-            <div class="stat-card">
-                <h3>Total Appointments</h3>
-                <div class="stat-number" id="totalAppointments">0</div>
+            <div class="stat-card blue">
+                <div class="stat-label">Total Appointments</div>
+                <div class="stat-value" id="totalAppointments">—</div>
             </div>
-            <div class="stat-card">
-                <h3>Contact Messages</h3>
-                <div class="stat-number" id="totalContacts">0</div>
+            <div class="stat-card green">
+                <div class="stat-label">Contact Messages</div>
+                <div class="stat-value" id="totalContacts">—</div>
             </div>
         </div>
 
         <!-- Tabs -->
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('appointments')">Appointments</button>
-            <button class="tab-btn" onclick="switchTab('users')">Users</button>
-            <button class="tab-btn" onclick="switchTab('contacts')">Contact Messages</button>
-        </div>
+        <div class="tabs-wrapper">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="switchTab('appointments', this)">Appointments</button>
+                <button class="tab-btn" onclick="switchTab('users', this)">Users</button>
+                <button class="tab-btn" onclick="switchTab('contacts', this)">Messages</button>
+            </div>
 
-        <!-- Appointments Tab -->
-        <div id="appointments-tab" class="tab-content active">
-            <div class="search-box">
-                <input type="text" id="appointmentSearch" placeholder="Search appointments by name, phone, or service..." onkeyup="filterAppointments()">
-            </div>
-            <div class="data-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date Created</th>
-                            <th>Name</th>
-                            <th>Phone</th>
-                            <th>Email</th>
-                            <th>Service</th>
-                            <th>Preferred Date</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="appointmentsTable">
-                        <tr><td colspan="8" class="loading">Loading appointments...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+            <div class="tab-body">
 
-        <!-- Users Tab -->
-        <div id="users-tab" class="tab-content">
-            <div class="search-box">
-                <input type="text" id="userSearch" placeholder="Search users by name or email..." onkeyup="filterUsers()">
-            </div>
-            <div class="data-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Registered</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Auth Method</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="usersTable">
-                        <tr><td colspan="6" class="loading">Loading users...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                <!-- APPOINTMENTS -->
+                <div id="appointments-tab" class="tab-content active">
+                    <div class="search-row">
+                        <div class="search-input-wrap">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            <input class="search-input" type="text" id="appointmentSearch" placeholder="Search by name, phone, or service…" oninput="filterAppointments()">
+                        </div>
+                        <button class="refresh-btn" onclick="loadAppointments()">↻ Refresh</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Created</th>
+                                    <th>Customer</th>
+                                    <th>Service</th>
+                                    <th>Pref. Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointmentsTable">
+                                <tr class="empty-row"><td colspan="6">Loading appointments…</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-        <!-- Contacts Tab -->
-        <div id="contacts-tab" class="tab-content">
-            <div class="search-box">
-                <input type="text" id="contactSearch" placeholder="Search messages..." onkeyup="filterContacts()">
-            </div>
-            <div class="data-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Message</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="contactsTable">
-                        <tr><td colspan="6" class="loading">Loading contacts...</td></tr>
-                    </tbody>
-                </table>
+                <!-- USERS -->
+                <div id="users-tab" class="tab-content">
+                    <div class="search-row">
+                        <div class="search-input-wrap">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            <input class="search-input" type="text" id="userSearch" placeholder="Search by name or email…" oninput="filterUsers()">
+                        </div>
+                        <button class="refresh-btn" onclick="loadUsers()">↻ Refresh</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Registered</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Auth</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTable">
+                                <tr class="empty-row"><td colspan="6">Loading users…</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- CONTACTS -->
+                <div id="contacts-tab" class="tab-content">
+                    <div class="search-row">
+                        <div class="search-input-wrap">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            <input class="search-input" type="text" id="contactSearch" placeholder="Search messages…" oninput="filterContacts()">
+                        </div>
+                        <button class="refresh-btn" onclick="loadContacts()">↻ Refresh</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Preview</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contactsTable">
+                                <tr class="empty-row"><td colspan="6">Loading messages…</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
+
+    <!-- ===== DETAILS MODAL ===== -->
+    <div class="modal-overlay" id="detailsOverlay" onclick="closeModalOnBg(event)">
+        <div class="details-modal" id="detailsModal">
+            <div id="printZone">
+
+                <!-- Print-only shop header -->
+                <div class="print-shop-header">
+                    <div class="print-shop-name">🔧 Advanced Auto Repair Zone</div>
+                    <div class="print-shop-contact">
+                        190-20 99th Ave, Hollis, NY 11423<br>
+                        +1 (718) 674-2455 · advanceautozone25@gmail.com
+                    </div>
+                </div>
+
+                <!-- Modal top -->
+                <div class="modal-top">
+                    <div class="modal-title-block">
+                        <div class="modal-eyebrow">Appointment Details</div>
+                        <div class="modal-title" id="modalCustomerName">—</div>
+                        <div class="modal-id" id="modalAppointmentId">—</div>
+                    </div>
+                    <div style="display:flex; gap:0.5rem; align-items:flex-start; flex-wrap:wrap;">
+                        <div class="modal-header-actions">
+                            <button class="mha-btn" onclick="copyDetails()">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                Copy
+                            </button>
+                            <button class="mha-btn pdf-btn" onclick="saveAsPDF()">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                                Save PDF
+                            </button>
+                        </div>
+                        <button class="close-btn" onclick="closeModal()">✕</button>
+                    </div>
+                </div>
+
+                <!-- Status change row -->
+                <div class="status-row">
+                    <span class="status-row-label">Update Status:</span>
+                    <div class="status-row-actions" id="modalStatusActions"></div>
+                </div>
+
+                <!-- Customer info -->
+                <div class="info-section">
+                    <div class="section-label">Customer Information</div>
+                    <div class="info-grid cols-3">
+                        <div class="info-item">
+                            <div class="info-item-label">Full Name</div>
+                            <div class="info-item-value" id="d-name">—</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-item-label">Phone</div>
+                            <div class="info-item-value" id="d-phone">—</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-item-label">Email</div>
+                            <div class="info-item-value" id="d-email">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appointment info -->
+                <div class="info-section">
+                    <div class="section-label">Appointment Information</div>
+                    <div class="info-grid cols-3">
+                        <div class="info-item">
+                            <div class="info-item-label">Service</div>
+                            <div class="info-item-value" id="d-service">—</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-item-label">Preferred Date</div>
+                            <div class="info-item-value mono" id="d-date">—</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-item-label">Status</div>
+                            <div class="info-item-value" id="d-status">—</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-item-label">Created At</div>
+                            <div class="info-item-value mono" id="d-created">—</div>
+                        </div>
+                        <div class="info-item" id="d-distance-wrap" style="display:none;">
+                            <div class="info-item-label">Distance</div>
+                            <div class="info-item-value mono" id="d-distance">—</div>
+                        </div>
+                        <div class="info-item" id="d-cost-wrap" style="display:none;">
+                            <div class="info-item-label">Estimated Cost</div>
+                            <div class="info-item-value cost" id="d-cost">—</div>
+                        </div>
+                        <div class="info-item" id="d-urgent-wrap" style="display:none;">
+                            <div class="info-item-label">Urgent</div>
+                            <div class="info-item-value urgent-yes" id="d-urgent">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message -->
+                <div class="info-section" id="d-message-section" style="display:none;">
+                    <div class="section-label">Message / Notes</div>
+                    <div class="message-box" id="d-message"></div>
+                </div>
+
+                <!-- Location & Map -->
+                <div class="info-section" id="d-location-section" style="display:none;">
+                    <div class="section-label">Pickup Location</div>
+                    <div class="info-item" style="margin-bottom:0.75rem;">
+                        <div class="info-item-label">Address</div>
+                        <div class="info-item-value" id="d-location">—</div>
+                    </div>
+                    <div class="map-container">
+                        <div id="detailMap"></div>
+                    </div>
+                    <a class="open-maps-btn" id="openMapsLink" href="#" target="_blank">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        Open in Google Maps
+                    </a>
+                </div>
+
+            </div><!-- /printZone -->
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
 
     <script src="js/config.js"></script>
     <script>
@@ -370,337 +1007,446 @@
         let allAppointments = [];
         let allUsers = [];
         let allContacts = [];
+        let currentAppointment = null;
+        let detailMap = null;
+        let detailMarker = null;
 
-        // Check if admin is logged in
+        // ===== AUTH =====
         function checkAdminAuth() {
             const adminUser = sessionStorage.getItem('autoShopAdmin');
-            if (!adminUser) {
-                window.location.href = '/admin-login.html';
-                return false;
-            }
+            if (!adminUser) { window.location.href = '/admin-login.html'; return false; }
             return JSON.parse(adminUser);
         }
 
         const admin = checkAdminAuth();
 
-        // Logout
         function logout() {
+            if (!confirm('Sign out of admin panel?')) return;
             sessionStorage.removeItem('autoShopAdmin');
             window.location.href = '/admin-login.html';
         }
 
-        // Switch tabs
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
-            event.target.classList.add('active');
+        // ===== TOAST =====
+        function showToast(msg, isSuccess = true) {
+            const t = document.getElementById('toast');
+            t.innerHTML = (isSuccess ? '✓ ' : '✕ ') + msg;
+            t.style.borderColor = isSuccess ? 'rgba(34,197,94,0.3)' : 'rgba(224,36,42,0.3)';
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // ===== FORMAT DATE =====
+        function formatDate(d) {
+            if (!d) return 'N/A';
+            const dt = new Date(d);
+            return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                + ' ' + dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function formatShortDate(d) {
+            if (!d) return 'N/A';
+            return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        // ===== BADGE =====
+        function badge(status) {
+            return `<span class="badge badge-${status}">${status}</span>`;
+        }
+
+        // ===== TABS =====
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            if (btn) btn.classList.add('active');
             document.getElementById(tab + '-tab').classList.add('active');
         }
 
-        // Format date
-        function formatDate(dateString) {
-            if (!dateString) return 'N/A';
-            const date = new Date(dateString);
-            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        }
-
-        // Load appointments
+        // ===== LOAD APPOINTMENTS =====
         async function loadAppointments() {
             try {
-                const response = await fetch(API_URL + '/appointments', {
-                    headers: {
-                        'Authorization': 'Bearer ' + admin.token
-                    }
+                const r = await fetch(API_URL + '/appointments', {
+                    headers: { 'Authorization': 'Bearer ' + admin.token }
                 });
-                const data = await response.json();
+                const data = await r.json();
                 allAppointments = data.appointments || [];
-                
                 displayAppointments(allAppointments);
                 updateStats();
-            } catch (error) {
-                console.error('Error loading appointments:', error);
-                document.getElementById('appointmentsTable').innerHTML = 
-                    '<tr><td colspan="8" class="empty-state">Error loading appointments</td></tr>';
+            } catch (e) {
+                document.getElementById('appointmentsTable').innerHTML =
+                    '<tr class="empty-row"><td colspan="6">Failed to load appointments</td></tr>';
             }
         }
 
-        function displayAppointments(appointments) {
-            const tbody = document.getElementById('appointmentsTable');
-            
-            if (appointments.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No appointments found</td></tr>';
+        function displayAppointments(list) {
+            const tb = document.getElementById('appointmentsTable');
+            if (!list.length) {
+                tb.innerHTML = '<tr class="empty-row"><td colspan="6">No appointments found</td></tr>';
                 return;
             }
-
-            tbody.innerHTML = appointments.map(apt => `
+            tb.innerHTML = list.map(apt => `
                 <tr>
-                    <td>${formatDate(apt.createdAt)}</td>
-                    <td>${apt.name}</td>
-                    <td>${apt.phone}</td>
-                    <td>${apt.email || 'N/A'}</td>
-                    <td>${apt.service}</td>
-                    <td>${apt.preferredDate ? new Date(apt.preferredDate).toLocaleDateString() : 'N/A'}</td>
-                    <td><span class="status-badge status-${apt.status}">${apt.status}</span></td>
+                    <td class="cell-phone">${formatShortDate(apt.createdAt)}</td>
                     <td>
-                        <button class="action-btn" onclick="viewDetails('${apt._id}')">Details</button>
-                        ${apt.status === 'pending' ? `<button class="action-btn btn-confirm" onclick="updateStatus('${apt._id}', 'confirmed')">Confirm</button>` : ''}
-                        ${apt.status === 'confirmed' ? `<button class="action-btn btn-complete" onclick="updateStatus('${apt._id}', 'completed')">Complete</button>` : ''}
-                        ${apt.status !== 'cancelled' ? `<button class="action-btn btn-cancel" onclick="updateStatus('${apt._id}', 'cancelled')">Cancel</button>` : ''}
-                        <button class="action-btn btn-delete" onclick="deleteAppointment('${apt._id}')">Delete</button>
+                        <div class="cell-name">${apt.name}</div>
+                        <div class="cell-phone">${apt.phone}</div>
+                    </td>
+                    <td class="cell-service">${apt.service || 'N/A'}</td>
+                    <td class="cell-phone">${apt.preferredDate ? formatShortDate(apt.preferredDate) : 'N/A'}</td>
+                    <td>${badge(apt.status || 'pending')}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="act-btn act-details" onclick="openDetails('${apt._id}')">Details</button>
+                            ${apt.status === 'pending' ? `<button class="act-btn act-confirm" onclick="updateStatus('${apt._id}','confirmed')">Confirm</button>` : ''}
+                            ${apt.status === 'confirmed' ? `<button class="act-btn act-complete" onclick="updateStatus('${apt._id}','completed')">Complete</button>` : ''}
+                            ${apt.status !== 'cancelled' && apt.status !== 'completed' ? `<button class="act-btn act-cancel" onclick="updateStatus('${apt._id}','cancelled')">Cancel</button>` : ''}
+                            <button class="act-btn act-delete" onclick="deleteAppointment('${apt._id}')">Delete</button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
         }
 
         function filterAppointments() {
-            const search = document.getElementById('appointmentSearch').value.toLowerCase();
-            const filtered = allAppointments.filter(apt => 
-                apt.name.toLowerCase().includes(search) ||
-                apt.phone.includes(search) ||
-                apt.service.toLowerCase().includes(search) ||
-                (apt.email && apt.email.toLowerCase().includes(search))
-            );
-            displayAppointments(filtered);
+            const s = document.getElementById('appointmentSearch').value.toLowerCase();
+            displayAppointments(allAppointments.filter(a =>
+                a.name.toLowerCase().includes(s) ||
+                (a.phone || '').includes(s) ||
+                (a.service || '').toLowerCase().includes(s) ||
+                (a.email || '').toLowerCase().includes(s)
+            ));
         }
 
-        // Update appointment status
+        // ===== UPDATE STATUS =====
         async function updateStatus(id, status) {
             try {
-                const response = await fetch(API_URL + '/appointments/' + id, {
+                const r = await fetch(API_URL + '/appointments/' + id, {
                     method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + admin.token
-                    },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + admin.token },
                     body: JSON.stringify({ status })
                 });
-
-                if (response.ok) {
-                    alert('Status updated successfully!');
-                    loadAppointments();
+                if (r.ok) {
+                    showToast('Status updated to ' + status);
+                    await loadAppointments();
+                    // Update modal if open
+                    if (currentAppointment && currentAppointment._id === id) {
+                        currentAppointment.status = status;
+                        document.getElementById('d-status').innerHTML = badge(status);
+                        renderModalStatusActions(status, id);
+                    }
                 } else {
-                    alert('Failed to update status');
+                    showToast('Failed to update status', false);
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error updating status');
-            }
+            } catch (e) { showToast('Connection error', false); }
         }
 
-        function viewDetails(id) {
-            const appointment = allAppointments.find(apt => apt._id === id);
+        // ===== DELETE APPOINTMENT =====
+        async function deleteAppointment(id) {
+            if (!confirm('Delete this appointment permanently?')) return;
+            try {
+                const r = await fetch(API_URL + '/appointments/' + id, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + admin.token }
+                });
+                if (r.ok) { showToast('Appointment deleted'); loadAppointments(); closeModal(); }
+                else showToast('Failed to delete', false);
+            } catch (e) { showToast('Connection error', false); }
+        }
 
-            if (!appointment) {
-                alert('Appointment not found');
+        // ===== OPEN DETAILS MODAL =====
+        function openDetails(id) {
+            const apt = allAppointments.find(a => a._id === id);
+            if (!apt) return;
+            currentAppointment = apt;
+
+            // Header
+            document.getElementById('modalCustomerName').textContent = apt.name;
+            document.getElementById('modalAppointmentId').textContent = 'ID: ' + apt._id;
+
+            // Customer
+            document.getElementById('d-name').textContent = apt.name || '—';
+            document.getElementById('d-phone').innerHTML = apt.phone
+                ? `<a href="tel:${apt.phone}">${apt.phone}</a>` : '—';
+            document.getElementById('d-email').innerHTML = apt.email
+                ? `<a href="mailto:${apt.email}">${apt.email}</a>` : '—';
+
+            // Appointment
+            document.getElementById('d-service').textContent = apt.service || '—';
+            document.getElementById('d-date').textContent = apt.preferredDate ? formatShortDate(apt.preferredDate) : '—';
+            document.getElementById('d-status').innerHTML = badge(apt.status || 'pending');
+            document.getElementById('d-created').textContent = formatDate(apt.createdAt);
+
+            // Towing-specific fields
+            const hasDist = apt.distance != null && apt.distance !== '';
+            const hasCost = apt.estimatedCost != null && apt.estimatedCost !== '';
+            const hasUrgent = apt.urgent;
+
+            document.getElementById('d-distance-wrap').style.display = hasDist ? '' : 'none';
+            if (hasDist) document.getElementById('d-distance').textContent = apt.distance + ' miles';
+
+            document.getElementById('d-cost-wrap').style.display = hasCost ? '' : 'none';
+            if (hasCost) document.getElementById('d-cost').textContent = '$' + apt.estimatedCost;
+
+            document.getElementById('d-urgent-wrap').style.display = hasUrgent ? '' : 'none';
+            if (hasUrgent) document.getElementById('d-urgent').textContent = apt.urgent === 'Yes' ? '🚨 YES — URGENT' : 'No';
+
+            // Message
+            const msgSection = document.getElementById('d-message-section');
+            if (apt.message) {
+                msgSection.style.display = '';
+                document.getElementById('d-message').textContent = apt.message;
+            } else {
+                msgSection.style.display = 'none';
+            }
+
+            // Location + Map
+            const locSection = document.getElementById('d-location-section');
+            if (apt.location) {
+                locSection.style.display = '';
+                document.getElementById('d-location').textContent = apt.location;
+                const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(apt.location);
+                document.getElementById('openMapsLink').href = mapsUrl;
+                initDetailMap(apt.location);
+            } else {
+                locSection.style.display = 'none';
+            }
+
+            // Status actions
+            renderModalStatusActions(apt.status || 'pending', apt._id);
+
+            // Show modal
+            document.getElementById('detailsOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // ===== MODAL STATUS ACTIONS =====
+        function renderModalStatusActions(status, id) {
+            const wrap = document.getElementById('modalStatusActions');
+            let html = '';
+            if (status === 'pending') html += `<button class="act-btn act-confirm" onclick="updateStatus('${id}','confirmed')">✓ Confirm</button>`;
+            if (status === 'confirmed') html += `<button class="act-btn act-complete" onclick="updateStatus('${id}','completed')">✓ Mark Complete</button>`;
+            if (status !== 'cancelled' && status !== 'completed') html += `<button class="act-btn act-cancel" onclick="updateStatus('${id}','cancelled')">✕ Cancel</button>`;
+            html += `<button class="act-btn act-delete" onclick="deleteAppointment('${id}')">🗑 Delete</button>`;
+            wrap.innerHTML = html;
+        }
+
+        // ===== INIT DETAIL MAP =====
+        function initDetailMap(address) {
+            const mapEl = document.getElementById('detailMap');
+            mapEl.innerHTML = '';
+
+            if (typeof google === 'undefined') {
+                mapEl.innerHTML = '<div class="map-no-location"><span>🗺</span><span>Maps unavailable</span></div>';
                 return;
             }
 
-            let details = `
-        Appointment Details
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ address: address }, (results, status) => {
+                if (status === 'OK' && results[0]) {
+                    const loc = results[0].geometry.location;
 
-        Name: ${appointment.name}
-        Email: ${appointment.email || 'N/A'}
-        Phone: ${appointment.phone}
-        Service: ${appointment.service}
-        Preferred Date: ${appointment.preferredDate ? new Date(appointment.preferredDate).toLocaleString() : 'N/A'}
-        Message: ${appointment.message || 'N/A'}
-        Status: ${appointment.status}
-        Created At: ${new Date(appointment.createdAt).toLocaleString()}
-            `;
+                    detailMap = new google.maps.Map(mapEl, {
+                        center: loc,
+                        zoom: 14,
+                        mapTypeControl: false,
+                        streetViewControl: false,
+                        fullscreenControl: true,
+                        styles: [
+                            { elementType: 'geometry', stylers: [{ color: '#1a1a2e' }] },
+                            { elementType: 'labels.text.fill', stylers: [{ color: '#8ec3b9' }] },
+                            { elementType: 'labels.text.stroke', stylers: [{ color: '#1a3646' }] },
+                            { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#304a7d' }] },
+                            { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0e1626' }] }
+                        ]
+                    });
 
-            alert(details);
-        }
+                    new google.maps.Marker({
+                        position: loc,
+                        map: detailMap,
+                        title: address,
+                        icon: { url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png' }
+                    });
 
-        // Delete appointment
-        async function deleteAppointment(id) {
-            if (!confirm('Are you sure you want to delete this appointment?')) return;
+                    // Shop marker
+                    const shopLoc = { lat: 40.7156, lng: -73.7629 };
+                    new google.maps.Marker({
+                        position: shopLoc,
+                        map: detailMap,
+                        title: 'Our Shop',
+                        icon: { url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' }
+                    });
 
-            try {
-                const response = await fetch(API_URL + '/appointments/' + id, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': 'Bearer ' + admin.token
-                    }
-                });
-
-                if (response.ok) {
-                    alert('Appointment deleted!');
-                    loadAppointments();
                 } else {
-                    alert('Failed to delete appointment');
+                    mapEl.innerHTML = `<div class="map-no-location"><span>📍</span><span>Could not load map for this address</span></div>`;
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error deleting appointment');
-            }
+            });
         }
 
-        // Load users
+        // ===== CLOSE MODAL =====
+        function closeModal() {
+            document.getElementById('detailsOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+            currentAppointment = null;
+        }
+
+        function closeModalOnBg(e) {
+            if (e.target === document.getElementById('detailsOverlay')) closeModal();
+        }
+
+        // ===== COPY DETAILS =====
+        function copyDetails() {
+            if (!currentAppointment) return;
+            const a = currentAppointment;
+            const text = [
+                '=== APPOINTMENT DETAILS ===',
+                'Customer: ' + a.name,
+                'Phone: ' + (a.phone || 'N/A'),
+                'Email: ' + (a.email || 'N/A'),
+                '',
+                'Service: ' + (a.service || 'N/A'),
+                'Preferred Date: ' + (a.preferredDate ? formatShortDate(a.preferredDate) : 'N/A'),
+                'Status: ' + (a.status || 'pending'),
+                'Created: ' + formatDate(a.createdAt),
+                a.distance ? 'Distance: ' + a.distance + ' miles' : '',
+                a.estimatedCost ? 'Estimated Cost: $' + a.estimatedCost : '',
+                a.urgent ? 'Urgent: ' + a.urgent : '',
+                a.location ? '\nLocation: ' + a.location : '',
+                a.message ? '\nNotes:\n' + a.message : '',
+                '',
+                '=== Advanced Auto Repair Zone ===',
+                '190-20 99th Ave, Hollis, NY 11423',
+                '+1 (718) 674-2455'
+            ].filter(Boolean).join('\n');
+
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Details copied to clipboard');
+            }).catch(() => {
+                showToast('Could not copy', false);
+            });
+        }
+
+        // ===== SAVE AS PDF =====
+        function saveAsPDF() {
+            window.print();
+        }
+
+        // ===== LOAD USERS =====
         async function loadUsers() {
             try {
-                const response = await fetch(API_URL + '/users', {
-                    headers: {
-                        'Authorization': 'Bearer ' + admin.token
-                    }
+                const r = await fetch(API_URL + '/users', {
+                    headers: { 'Authorization': 'Bearer ' + admin.token }
                 });
-                const data = await response.json();
+                const data = await r.json();
                 allUsers = data.users || [];
-                
                 displayUsers(allUsers);
                 updateStats();
-            } catch (error) {
-                console.error('Error loading users:', error);
-                document.getElementById('usersTable').innerHTML = 
-                    '<tr><td colspan="6" class="empty-state">Error loading users</td></tr>';
+            } catch (e) {
+                document.getElementById('usersTable').innerHTML =
+                    '<tr class="empty-row"><td colspan="6">Failed to load users</td></tr>';
             }
         }
 
-        function displayUsers(users) {
-            const tbody = document.getElementById('usersTable');
-            
-            if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No users found</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = users.map(user => `
+        function displayUsers(list) {
+            const tb = document.getElementById('usersTable');
+            if (!list.length) { tb.innerHTML = '<tr class="empty-row"><td colspan="6">No users found</td></tr>'; return; }
+            tb.innerHTML = list.map(u => `
                 <tr>
-                    <td>${formatDate(user.createdAt)}</td>
-                    <td>${user.name}</td>
-                    <td>${user.email}</td>
-                    <td>${user.phone || 'N/A'}</td>
-                    <td>${user.authProvider || 'local'}</td>
-                    <td>
-                        <button class="action-btn btn-delete" onclick="deleteUser('${user._id}')">Delete</button>
-                    </td>
+                    <td class="cell-phone">${formatShortDate(u.createdAt)}</td>
+                    <td class="cell-name">${u.name}</td>
+                    <td class="cell-phone">${u.email}</td>
+                    <td class="cell-phone">${u.phone || '—'}</td>
+                    <td><span class="badge badge-confirmed">${u.authProvider || 'local'}</span></td>
+                    <td><button class="act-btn act-delete" onclick="deleteUser('${u._id}')">Delete</button></td>
                 </tr>
             `).join('');
         }
 
         function filterUsers() {
-            const search = document.getElementById('userSearch').value.toLowerCase();
-            const filtered = allUsers.filter(user => 
-                user.name.toLowerCase().includes(search) ||
-                user.email.toLowerCase().includes(search)
-            );
-            displayUsers(filtered);
+            const s = document.getElementById('userSearch').value.toLowerCase();
+            displayUsers(allUsers.filter(u =>
+                u.name.toLowerCase().includes(s) || u.email.toLowerCase().includes(s)
+            ));
         }
 
-        // Delete user
         async function deleteUser(id) {
-            if (!confirm('Are you sure you want to delete this user?')) return;
-
+            if (!confirm('Delete this user permanently?')) return;
             try {
-                const response = await fetch(API_URL + '/users/' + id, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': 'Bearer ' + admin.token
-                    }
+                const r = await fetch(API_URL + '/users/' + id, {
+                    method: 'DELETE', headers: { 'Authorization': 'Bearer ' + admin.token }
                 });
-
-                if (response.ok) {
-                    alert('User deleted!');
-                    loadUsers();
-                } else {
-                    alert('Failed to delete user');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error deleting user');
-            }
+                if (r.ok) { showToast('User deleted'); loadUsers(); }
+                else showToast('Failed to delete', false);
+            } catch (e) { showToast('Connection error', false); }
         }
 
-        // Load contacts
+        // ===== LOAD CONTACTS =====
         async function loadContacts() {
             try {
-                const response = await fetch(API_URL + '/contact', {
-                    headers: {
-                        'Authorization': 'Bearer ' + admin.token
-                    }
+                const r = await fetch(API_URL + '/contact', {
+                    headers: { 'Authorization': 'Bearer ' + admin.token }
                 });
-                const data = await response.json();
+                const data = await r.json();
                 allContacts = data.contacts || [];
-                
                 displayContacts(allContacts);
                 updateStats();
-            } catch (error) {
-                console.error('Error loading contacts:', error);
-                document.getElementById('contactsTable').innerHTML = 
-                    '<tr><td colspan="6" class="empty-state">Error loading contacts</td></tr>';
+            } catch (e) {
+                document.getElementById('contactsTable').innerHTML =
+                    '<tr class="empty-row"><td colspan="6">Failed to load messages</td></tr>';
             }
         }
 
-        function displayContacts(contacts) {
-            const tbody = document.getElementById('contactsTable');
-            
-            if (contacts.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No contact messages found</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = contacts.map(contact => `
+        function displayContacts(list) {
+            const tb = document.getElementById('contactsTable');
+            if (!list.length) { tb.innerHTML = '<tr class="empty-row"><td colspan="6">No messages found</td></tr>'; return; }
+            tb.innerHTML = list.map(c => `
                 <tr>
-                    <td>${formatDate(contact.createdAt)}</td>
-                    <td>${contact.name}</td>
-                    <td>${contact.email}</td>
-                    <td>${contact.phone || 'N/A'}</td>
-                    <td style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${contact.message}</td>
-                    <td>
-                        <button class="action-btn btn-delete" onclick="deleteContact('${contact._id}')">Delete</button>
-                    </td>
+                    <td class="cell-phone">${formatShortDate(c.createdAt)}</td>
+                    <td class="cell-name">${c.name}</td>
+                    <td class="cell-phone">${c.email}</td>
+                    <td class="cell-phone">${c.phone || '—'}</td>
+                    <td style="max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--text-muted); font-size:0.85rem;">${c.message}</td>
+                    <td><button class="act-btn act-delete" onclick="deleteContact('${c._id}')">Delete</button></td>
                 </tr>
             `).join('');
         }
 
         function filterContacts() {
-            const search = document.getElementById('contactSearch').value.toLowerCase();
-            const filtered = allContacts.filter(contact => 
-                contact.name.toLowerCase().includes(search) ||
-                contact.email.toLowerCase().includes(search) ||
-                contact.message.toLowerCase().includes(search)
-            );
-            displayContacts(filtered);
+            const s = document.getElementById('contactSearch').value.toLowerCase();
+            displayContacts(allContacts.filter(c =>
+                c.name.toLowerCase().includes(s) ||
+                c.email.toLowerCase().includes(s) ||
+                c.message.toLowerCase().includes(s)
+            ));
         }
 
-        // Delete contact
         async function deleteContact(id) {
-            if (!confirm('Are you sure you want to delete this message?')) return;
-
+            if (!confirm('Delete this message permanently?')) return;
             try {
-                const response = await fetch(API_URL + '/contact/' + id, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': 'Bearer ' + admin.token
-                    }
+                const r = await fetch(API_URL + '/contact/' + id, {
+                    method: 'DELETE', headers: { 'Authorization': 'Bearer ' + admin.token }
                 });
-
-                if (response.ok) {
-                    alert('Message deleted!');
-                    loadContacts();
-                } else {
-                    alert('Failed to delete message');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error deleting message');
-            }
+                if (r.ok) { showToast('Message deleted'); loadContacts(); }
+                else showToast('Failed to delete', false);
+            } catch (e) { showToast('Connection error', false); }
         }
 
-        // Update statistics
+        // ===== STATS =====
         function updateStats() {
-            document.getElementById('totalUsers').textContent = allUsers.length;
-            document.getElementById('totalAppointments').textContent = allAppointments.length;
-            document.getElementById('pendingAppointments').textContent = 
-                allAppointments.filter(apt => apt.status === 'pending').length;
-            document.getElementById('totalContacts').textContent = allContacts.length;
+            document.getElementById('totalUsers').textContent = allUsers.length || '0';
+            document.getElementById('totalAppointments').textContent = allAppointments.length || '0';
+            document.getElementById('pendingAppointments').textContent =
+                allAppointments.filter(a => (a.status || 'pending') === 'pending').length || '0';
+            document.getElementById('totalContacts').textContent = allContacts.length || '0';
         }
 
-        // Initialize
+        // ===== KEYBOARD CLOSE =====
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // ===== INIT =====
         loadAppointments();
         loadUsers();
         loadContacts();
     </script>
-
 </body>
 </html>
