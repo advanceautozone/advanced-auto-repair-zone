@@ -376,21 +376,21 @@
                     
                     <div class="pricing-breakdown">
                         <div class="price-item">
-                            <h3>Base Rate (0-10 KM)</h3>
+                            <h3>Base Rate (0-10 Miles)</h3>
                             <div class="amount">$100</div>
-                            <p>Covers pickup and delivery within 10 kilometers from our shop</p>
+                            <p>Covers pickup and delivery within 10 miles from our shop</p>
                         </div>
 
                         <div class="price-item">
-                            <h3>Beyond 10 KM</h3>
-                            <div class="amount">$15<span style="font-size: 1rem;">/km</span></div>
-                            <p>Additional charge for each kilometer beyond 10 km radius</p>
+                            <h3>Beyond 10 Miles</h3>
+                            <div class="amount">$15<span style="font-size: 1rem;">/mile</span></div>
+                            <p>Additional charge for each mile beyond 10 mile radius</p>
                         </div>
                     </div>
 
                     <div style="margin-top: 2rem; padding: 1rem; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0369a1;">
                         <strong style="color: #0c5460;">Example Calculation:</strong><br>
-                        <span style="color: #0c5460;">Distance: 15 KM → Base $100 + (5 km × $15) = <strong>$175 total</strong></span>
+                        <span style="color: #0c5460;">Distance: 15 Miles → Base $100 + (5 miles × $15) = <strong>$175 total</strong></span>
                     </div>
                 </div>
 
@@ -431,7 +431,7 @@
                         <div id="selectedLocationInfo" style="display:none; padding: 1rem; background: #e8f5e9; border-radius: 8px; margin-bottom: 1rem;">
                             <strong style="color: #2e7d32;">Selected Location:</strong><br>
                             <span id="selectedAddress"></span><br>
-                            <strong style="color: #2e7d32;">Distance:</strong> <span id="selectedDistance"></span> KM
+                            <strong style="color: #2e7d32;">Distance:</strong> <span id="selectedDistance"></span> Miles
                         </div>
                     </div>
 
@@ -439,12 +439,12 @@
                     <div id="manualSection" class="location-input-section">
                         <form id="distanceCalculator">
                             <div class="form-group">
-                                <label for="distance-input">Enter Distance from Shop (KM):</label>
+                                <label for="distance-input">Enter Distance from Shop (Miles):</label>
                                 <input 
                                     type="number" 
                                     id="distance-input" 
                                     name="distance" 
-                                    placeholder="Enter distance in kilometers"
+                                    placeholder="Enter distance in miles"
                                     min="0"
                                     step="0.1"
                                     required
@@ -498,7 +498,7 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="req-distance">Distance (KM) *</label>
+                                <label for="req-distance">Distance (Miles) *</label>
                                 <input type="number" id="req-distance" name="distance" min="0" step="0.1" required readonly style="background: #f5f5f5;">
                                 <small style="color: #666;">Auto-filled from map selection</small>
                             </div>
@@ -598,10 +598,7 @@
                         </li>
                         <li>
                             <img src="icons/icon-clock.jpeg" alt="Clock icon">
-                            <span>Winter Time 10 am - 11 pm</span>
-                        </li>
-                        <li>
-                            <span>Summer Time 9 am - 11 pm</span>
+                            <span>Mon–Fri: 8am–6pm<br>Sat: 9am–3pm</span>
                         </li>
                     </ul>
                 </div>
@@ -616,7 +613,8 @@
                     <a href="#">Terms &amp; Conditions</a>
                 </div>
             </div>
-        </footer>
+        </div>
+    </footer>
     
     <script src="js/config.js"></script>    
     <script src="js/session-manager.js"></script>
@@ -626,7 +624,7 @@
 
         // ========== SHOP LOCATION (Advanced Auto Repair Zone, Hollis, NY) ==========
         const SHOP_LOCATION = {
-            lat: 40.7156,  // Hollis, NY coordinates
+            lat: 40.7156,
             lng: -73.7629,
             address: "190-20 99th Ave, Hollis, NY 11423, United States"
         };
@@ -642,7 +640,6 @@
 
         // ========== INITIALIZE GOOGLE MAP ==========
         function initMap() {
-            // Create map centered on shop location
             map = new google.maps.Map(document.getElementById('map'), {
                 center: SHOP_LOCATION,
                 zoom: 12,
@@ -650,7 +647,6 @@
                 streetViewControl: false
             });
 
-            // Add shop marker (red)
             shopMarker = new google.maps.Marker({
                 position: SHOP_LOCATION,
                 map: map,
@@ -661,7 +657,6 @@
                 animation: google.maps.Animation.DROP
             });
 
-            // Add shop info window
             const shopInfoWindow = new google.maps.InfoWindow({
                 content: '<div style="padding:10px;"><strong>🏪 Our Shop</strong><br>' + SHOP_LOCATION.address + '</div>'
             });
@@ -670,14 +665,12 @@
                 shopInfoWindow.open(map, shopMarker);
             });
 
-            // Initialize directions service
             directionsService = new google.maps.DirectionsService();
             directionsRenderer = new google.maps.DirectionsRenderer({
                 map: map,
                 suppressMarkers: false
             });
 
-            // Click on map to select vehicle location
             map.addListener('click', (event) => {
                 placeVehicleMarker(event.latLng);
             });
@@ -685,12 +678,10 @@
 
         // ========== PLACE VEHICLE MARKER ==========
         function placeVehicleMarker(location) {
-            // Remove existing vehicle marker
             if (vehicleMarker) {
                 vehicleMarker.setMap(null);
             }
 
-            // Create new vehicle marker (blue)
             vehicleMarker = new google.maps.Marker({
                 position: location,
                 map: map,
@@ -701,10 +692,7 @@
                 animation: google.maps.Animation.DROP
             });
 
-            // Calculate distance
             calculateDistance(location);
-
-            // Get address from coordinates
             getAddressFromCoordinates(location);
         }
 
@@ -722,21 +710,23 @@
                     
                     const route = result.routes[0];
                     const distanceInMeters = route.legs[0].distance.value;
-                    const distanceInKm = (distanceInMeters / 1000).toFixed(2);
+
+                    // Convert meters to miles (1 mile = 1609.344 meters)
+                    const distanceInMiles = (distanceInMeters / 1609.344).toFixed(2);
                     
-                    selectedDistance = parseFloat(distanceInKm);
+                    selectedDistance = parseFloat(distanceInMiles);
                     
                     // Update UI
-                    document.getElementById('selectedDistance').textContent = distanceInKm;
+                    document.getElementById('selectedDistance').textContent = distanceInMiles;
                     document.getElementById('selectedLocationInfo').style.display = 'block';
                     
                     // Calculate and show cost
                     showCalculatedCost(selectedDistance);
                     
                     // Auto-fill in request form
-                    document.getElementById('req-distance').value = distanceInKm;
+                    document.getElementById('req-distance').value = distanceInMiles;
                     
-                    console.log('Distance calculated:', distanceInKm, 'km');
+                    console.log('Distance calculated:', distanceInMiles, 'miles');
                 } else {
                     alert('Could not calculate distance. Please try again.');
                 }
@@ -751,8 +741,6 @@
                 if (status === 'OK' && results[0]) {
                     selectedAddress = results[0].formatted_address;
                     document.getElementById('selectedAddress').textContent = selectedAddress;
-                    
-                    // Auto-fill in request form
                     document.getElementById('req-location').value = selectedAddress;
                 }
             });
@@ -782,7 +770,6 @@
 
         // ========== SWITCH LOCATION METHOD ==========
         function switchLocationMethod(method) {
-            // Update toggle buttons
             document.getElementById('mapToggle').classList.remove('active');
             document.getElementById('manualToggle').classList.remove('active');
             
@@ -803,15 +790,15 @@
             let breakdown = {
                 base: 100,
                 extra: 0,
-                extraKm: 0
+                extraMiles: 0
             };
 
             if (distance > 10) {
-                const extraKm = distance - 10;
-                const extraCost = extraKm * 15;
+                const extraMiles = distance - 10;
+                const extraCost = extraMiles * 15;
                 cost = 100 + extraCost;
                 breakdown.extra = extraCost;
-                breakdown.extraKm = extraKm;
+                breakdown.extraMiles = extraMiles;
             }
 
             return { cost, breakdown };
@@ -823,20 +810,20 @@
             const { cost, breakdown } = calculateCost(distance);
             
             document.getElementById('result-distance').innerHTML = 
-                `Distance from shop: <strong>${distance.toFixed(2)} KM</strong>`;
+                `Distance from shop: <strong>${distance.toFixed(2)} Miles</strong>`;
             
             let breakdownHTML = `
                 <div>
-                    <span>Base Rate (0-10 KM):</span>
-                    <span>${breakdown.base}</span>
+                    <span>Base Rate (0-10 Miles):</span>
+                    <span>$${breakdown.base}</span>
                 </div>
             `;
             
-            if (breakdown.extraKm > 0) {
+            if (breakdown.extraMiles > 0) {
                 breakdownHTML += `
                     <div>
-                        <span>Extra Distance (${breakdown.extraKm.toFixed(2)} km × $15):</span>
-                        <span>${breakdown.extra.toFixed(2)}</span>
+                        <span>Extra Distance (${breakdown.extraMiles.toFixed(2)} miles × $15):</span>
+                        <span>$${breakdown.extra.toFixed(2)}</span>
                     </div>
                 `;
             }
@@ -844,12 +831,12 @@
             breakdownHTML += `
                 <div class="total">
                     <span>Total Cost:</span>
-                    <span>${cost.toFixed(2)}</span>
+                    <span>$${cost.toFixed(2)}</span>
                 </div>
             `;
             
             document.getElementById('result-breakdown').innerHTML = breakdownHTML;
-            document.getElementById('result-price').textContent = `${cost.toFixed(2)}`;
+            document.getElementById('result-price').textContent = `$${cost.toFixed(2)}`;
             
             resultBox.classList.add('show');
         }
@@ -873,7 +860,6 @@
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             
-            // Get form data
             const formData = new FormData(form);
             const distance = parseFloat(formData.get('distance'));
             const { cost } = calculateCost(distance);
@@ -889,7 +875,7 @@
                 issue: formData.get('issue') || '',
                 urgent: formData.get('urgent') ? 'Yes' : 'No',
                 estimatedCost: cost.toFixed(2),
-                message: `Towing Request:\nLocation: ${formData.get('location')}\nDistance: ${distance} km\nVehicle: ${formData.get('vehicleType')}\nEstimated Cost: $${cost.toFixed(2)}\nIssue: ${formData.get('issue') || 'Not specified'}\nUrgent: ${formData.get('urgent') ? 'YES' : 'No'}`,
+                message: `Towing Request:\nLocation: ${formData.get('location')}\nDistance: ${distance} miles\nVehicle: ${formData.get('vehicleType')}\nEstimated Cost: $${cost.toFixed(2)}\nIssue: ${formData.get('issue') || 'Not specified'}\nUrgent: ${formData.get('urgent') ? 'YES' : 'No'}`,
                 preferredDate: new Date().toISOString()
             };
             
@@ -912,7 +898,6 @@
                 const result = await response.json();
                 
                 if (response.ok) {
-                    // Success modal
                     const modal = document.createElement('div');
                     modal.style.cssText = 
                         'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);' +
@@ -957,7 +942,7 @@
             if (distance > 0) {
                 const { cost } = calculateCost(distance);
                 const label = this.previousElementSibling;
-                label.innerHTML = `Distance (KM) * <span style="color:#e0242a;font-weight:700;">→ Cost: ${cost.toFixed(2)}</span>`;
+                label.innerHTML = `Distance (Miles) * <span style="color:#e0242a;font-weight:700;">→ Cost: $${cost.toFixed(2)}</span>`;
             }
         });
 
